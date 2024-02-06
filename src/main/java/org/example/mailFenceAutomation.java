@@ -107,7 +107,6 @@ public class mailFenceAutomation {
             try {
                 WebElement loadingIsFinished = wait.until(ExpectedConditions.presenceOfElementLocated(
                         By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']")));
-                isFileLoaded = true;
 
             } catch (TimeoutException e) {
                 if (!isFileLoaded) {
