@@ -3,13 +3,13 @@ package org.example;
 import java.io.IOException;
 import java.util.Properties;
 
-public class config {
+public class Config {
     private static final String CONFIG_FILE = "config.properties";
     private static final Properties properties = new Properties();
 
     static {
         try {
-            properties.load(config.class.getClassLoader().getResourceAsStream(CONFIG_FILE));
+            properties.load(Config.class.getClassLoader().getResourceAsStream(CONFIG_FILE));
         } catch (IOException e) {
             throw new RuntimeException("Проверьте наличие config.properties", e);
         }
@@ -23,3 +23,5 @@ public class config {
         return properties.getProperty("password");
     }
 }
+
+
