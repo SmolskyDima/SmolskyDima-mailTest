@@ -17,7 +17,25 @@ public class MailFenceAutomationTest {
 
     private WebDriver driver;
     private static final String MAIL_URL = "https://mailfence.com";
-    TemporaryFileCreator fileCreator = new TemporaryFileCreator();
+    private static final String LOGIN_BUTTON_LOCATOR = "//button[text()='Log in']";
+    private static final String ENTER_BUTTON_LOCATOR = "//input[@value='Enter']";
+    private static final String LETTERS_BUTTON_LOCATOR = "nav-mail";
+    private static final String CREATE_NEW_LETTER_BUTTON_LOCATOR = "//div[text()='Создать']";
+    private static final String NAME_OF_EMAIL_LOCATOR = "//div[@class='GCSDBRWBCQ']";
+    private static final String RECIPIENT_TEXT_BOX_LOCATOR = "GCSDBRWBPL";
+    private static final String INPUT_LOCATOR = ".GCSDBRWBJSB.GCSDBRWBKSB";
+    private static final String INPUT_FROM_COMPUTER_LOCATOR = "input[type='file'][name^='docgwt-uid-']";
+    private static final String LOADING_IS_FINISHED_CHECKBOX_LOCATOR = "//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']";
+    private static final String PROGRESS_LOADING_BAR_LOCATOR = "//div[@class='GCSDBRWBCS']";
+    private static final String MAIL_SUBJECT_TEXT_BOX_LOCATOR = "mailSubject";
+    private static final String REFRESH_INCOMING_LETTERS_LOCATOR = "//div[text()='Обновить']";
+    private static final String SEND_LETTER_LOCATOR = "//div[text()='Отправить']";
+    private static final String TOGGLE_LOCATOR = "//b[@class='icon-Arrow-down']";
+    private static final String SAVE_IN_DOCUMENT_LOCATOR = "//span[@class and text()='Сохранить в документах']";
+    private static final String MY_DOCUMENT_LOCATOR = "//div[text()='Мои документы']";
+    private static final String SAVE_IN_MY_DOCUMENT_LOCATOR = "//div[@id='dialBtn_OK']";
+    private static final String DOCUMENTS_BUTTON_LOCATOR = "nav-docs";
+    private static final String DELETE_DOCUMENT_LOCATOR = "//span[text()='Удалить']";
 
     @BeforeClass
     public void setUp() {
@@ -26,13 +44,8 @@ public class MailFenceAutomationTest {
         options.addArguments("--disable-blink-features=AutomationControlled");
         driver = new ChromeDriver(options);
         driver.manage().window().maximize();
-        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(10));
+        driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
 
-    }
-
-    @AfterClass
-    public void tearDown() {
-        driver.quit();
     }
 
     @Test
@@ -40,7 +53,7 @@ public class MailFenceAutomationTest {
 
         driver.get(MAIL_URL);
 
-        WebElement login = driver.findElement(By.xpath("//button[text()='Log in']"));
+        WebElement login = driver.findElement(By.xpath(LOGIN_BUTTON_LOCATOR));
         login.click();
 
         WebElement usernameField = driver.findElement(By.name("UserID"));
@@ -49,19 +62,19 @@ public class MailFenceAutomationTest {
         usernameField.sendKeys(Config.getUsername());
         passwordField.sendKeys(Config.getPassword());
 
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
-        WebElement enterButton = driver.findElement(By.xpath("//input[@value='Enter']"));
+        WebElement enterButton = driver.findElement(By.xpath(ENTER_BUTTON_LOCATOR));
         enterButton.click();
 
-        WebElement letters = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-mail")));
+        WebElement letters = driver.findElement(By.id(LETTERS_BUTTON_LOCATOR));
         letters.click();
 
-        WebElement newLetter = wait.until(ExpectedConditions.presenceOfElementLocated(By.xpath("//div[text()='Создать']")));
+        WebElement newLetter = driver.findElement(By.xpath(CREATE_NEW_LETTER_BUTTON_LOCATOR));
         newLetter.click();
 
-        WebElement myEmailAddress = wait.until(ExpectedConditions.
-                visibilityOfElementLocated(By.xpath("//div[@class='GCSDBRWBCQ']")));
+        WebElement myEmailAddress = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(NAME_OF_EMAIL_LOCATOR)));
 
         String contentToCopy = myEmailAddress.getText();
 
@@ -76,76 +89,77 @@ public class MailFenceAutomationTest {
             System.out.println("Почтовый адрес не найден.");
         }
 
-        WebElement emailTo = wait.until(ExpectedConditions.presenceOfElementLocated(By.className("GCSDBRWBPL")));
+        WebElement emailTo = driver.findElement(By.className(RECIPIENT_TEXT_BOX_LOCATOR));
         emailTo.sendKeys(extractedEmail, Keys.ENTER);
 
-        WebElement elementInput = driver.findElement(By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB"));
+        WebElement elementInput = driver.findElement(By.cssSelector(INPUT_LOCATOR));
         elementInput.click();
 
-        String absolutePath = fileCreator.getFilePath().toAbsolutePath().toString();
+        TemporaryFileManager createTempFile = new TemporaryFileManager();
+        String absolutePath = createTempFile.getFilePath().toAbsolutePath().toString();
 
-        WebElement fileInput = wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .cssSelector("input[type='file'][name^='docgwt-uid-']")));
+        WebElement fileInput = driver.findElement(By
+                .cssSelector(INPUT_FROM_COMPUTER_LOCATOR));
         fileInput.sendKeys(absolutePath);
 
         boolean isFileLoaded = false;
 
         try {
-            WebElement loadingIsFinished = wait.until(ExpectedConditions.presenceOfElementLocated(
-                    By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']")));
+            driver.findElement(By.xpath(LOADING_IS_FINISHED_CHECKBOX_LOCATOR));
 
-        } catch (TimeoutException e) {
+        } catch (NoSuchElementException e) {
             if (!isFileLoaded) {
 
                 try {
-                    Boolean style = wait.until(ExpectedConditions.attributeToBe(
-                            By.xpath("//div[@class='GCSDBRWBCS']"), "style", "width: 100%; visibility: visible;"));
+                    wait.until(ExpectedConditions.attributeToBe(By
+                            .xpath(PROGRESS_LOADING_BAR_LOCATOR), "style", "width: 100%; visibility: visible;"));
                 } catch (TimeoutException second) {
                     System.out.println("Не удалось подтвердить успешную загрузку файла.");
                 }
             }
         }
 
-        WebElement mailSubject = driver.findElement(By.id("mailSubject"));
-        mailSubject.sendKeys(fileCreator.getExtractedDigitsFromFile());
+        WebElement mailSubject = driver.findElement(By.id(MAIL_SUBJECT_TEXT_BOX_LOCATOR));
 
-        WebElement sendLetter = wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath("//div[text()='Отправить']")));
+        mailSubject.sendKeys(createTempFile.getExtractedDigitsFromFile());
+
+        WebElement sendLetter = driver.findElement(By.xpath(SEND_LETTER_LOCATOR));
         sendLetter.click();
 
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                    .xpath("//div[@class='listSubject' and contains(text(), '" + fileCreator.getExtractedDigitsFromFile() + "')]")));
-        } catch (TimeoutException e) {
+                    .xpath("//div[@class='listSubject' and contains(text(), '"
+                            + createTempFile.getExtractedDigitsFromFile() + "')]")));
+        } catch (
+                TimeoutException e) {
             WebElement refreshListOfEmails = wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                    .xpath("//div[text()='Обновить']")));
+                    .xpath(REFRESH_INCOMING_LETTERS_LOCATOR)));
             refreshListOfEmails.click();
         }
 
-        WebElement until = wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .cssSelector("div.listSubject[title='" + fileCreator.getExtractedDigitsFromFile() + "']")));
+        WebElement until = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .cssSelector("div.listSubject[title='" + createTempFile.getExtractedDigitsFromFile() + "']")));
         until.click();
 
-        WebElement saveButton = wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//b[@class='icon-Arrow-down']")));
+        WebElement toggleButton = driver.findElement(By.xpath(TOGGLE_LOCATOR));
         JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", saveButton);
+        js.executeScript("arguments[0].click();", toggleButton);
 
-        WebElement saveInDocument = wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath("//span[@class and text()='Сохранить в документах']")));
+        WebElement saveInDocument = driver.findElement(By.xpath(SAVE_IN_DOCUMENT_LOCATOR));
         saveInDocument.click();
 
 
-        WebElement myDocument = wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath("//div[text()='Мои документы']")));
+        WebElement myDocument = wait.until(ExpectedConditions.visibilityOfElementLocated(By.xpath(MY_DOCUMENT_LOCATOR)));
         myDocument.click();
+
 
         wait.until(ExpectedConditions.not(ExpectedConditions.attributeContains(By
                 .xpath("//div[@id='dialBtn_OK']"), "class", "GCSDBRWBMB")));
-        WebElement element = driver.findElement(By.xpath("//div[@id='dialBtn_OK']"));
-        element.click();
+        WebElement saveButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(SAVE_IN_MY_DOCUMENT_LOCATOR)));
+        saveButton.click();
 
-        WebElement docsButton = wait.until(ExpectedConditions.visibilityOfElementLocated(By.id("nav-docs")));
+        WebElement docsButton = driver.findElement(By.id(DOCUMENTS_BUTTON_LOCATOR));
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
         docsButton.click();
 
@@ -155,16 +169,18 @@ public class MailFenceAutomationTest {
             throw new RuntimeException(e);
         }
 
-
-        WebElement elementToDelete = wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//div[contains(@title, '" + fileCreator.getExtractedDigitsFromFile() + "')]")));
+        WebElement elementToDelete = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath("//div[contains(@title, '" + createTempFile.getExtractedDigitsFromFile() + "')]")));
         Actions actions = new Actions(driver);
         actions.contextClick(elementToDelete).perform();
 
-        WebElement deletingElement = wait.until(ExpectedConditions.presenceOfElementLocated(By
-                .xpath("//span[text()='Удалить']")));
-        deletingElement.click();
-        driver.quit();
+        WebElement deleteFromDocumentElement = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(DELETE_DOCUMENT_LOCATOR)));
+        deleteFromDocumentElement.click();
+    }
 
+    @AfterClass
+    public void tearDown() {
+        driver.quit();
     }
 }

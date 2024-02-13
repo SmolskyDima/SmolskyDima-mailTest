@@ -5,17 +5,18 @@ import java.nio.file.Path;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
-public class TemporaryFileCreator {
+public class TemporaryFileManager {
 
-    private final Path temporaryFilePath ;
+    private final Path temporaryFilePath;
     private final String extractedDigitsFromFile;
 
-    public TemporaryFileCreator() {
+    public TemporaryFileManager() {
 
-        this.temporaryFilePath  = createTempFile();
-        this.extractedDigitsFromFile = extractRandomFileName(temporaryFilePath .getFileName().toString());
+        this.temporaryFilePath = createAndFillTempFile();
+        this.extractedDigitsFromFile = extractRandomFileName();
     }
-    private Path createTempFile() {
+
+    private Path createAndFillTempFile() {
         try {
             Path tempFilePath = Files.createTempFile(null, ".txt");
             try (FileWriter writer = new FileWriter(tempFilePath.toFile())) {
@@ -28,9 +29,9 @@ public class TemporaryFileCreator {
     }
 
 
-    private String extractRandomFileName(String fileName) {
+    private String extractRandomFileName() {
         Pattern digitPattern = Pattern.compile("\\d+");
-        Matcher digitMatcher = digitPattern.matcher(fileName);
+        Matcher digitMatcher = digitPattern.matcher(temporaryFilePath.getFileName().toString());
         StringBuilder result = new StringBuilder();
 
         while (digitMatcher.find()) {
@@ -41,7 +42,7 @@ public class TemporaryFileCreator {
 
 
     public Path getFilePath() {
-        return temporaryFilePath ;
+        return temporaryFilePath;
     }
 
     public String getExtractedDigitsFromFile() {
