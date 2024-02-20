@@ -1,3 +1,5 @@
+package org.example.pages;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
 import org.openqa.selenium.WebDriver;
@@ -29,7 +31,8 @@ public class FileActionsPage {
         js.executeScript("arguments[0].click();", toggleButton);
     }
 
-    public void saveInDocument() {
+    public void clickAttachedFileInDocument() {
+        clickToggleButton();
         driver.findElement(saveInDocumentLocator).click();
     }
 

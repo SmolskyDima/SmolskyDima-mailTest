@@ -1,3 +1,6 @@
+package org.example.pages;
+
+import org.example.utils.ScreenshotsManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -8,10 +11,10 @@ import java.time.Duration;
 public class DocumentsPage {
 
     private final WebDriver driver;
+
     private final WebDriverWait wait;
 
     private final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
-    private final By deleteElementLocator = By.xpath("//div[contains(@title, 'fileTitle')]");
     private final By deleteFromDocumentElementLocator = By.xpath("//span[text()='Удалить']");
 
 
@@ -20,14 +23,13 @@ public class DocumentsPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(30));
     }
 
-    public void checkGettingEmail(String uniqueName) {
+    public void waitUntilEmailReceived(String uniqueName) {
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(By
                     .xpath(String.format("//div[@class='listSubject' and contains(text(), '%s')]", uniqueName))));
         } catch (TimeoutException e) {
             wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator)).click();
         }
-
         wait.until(ExpectedConditions.visibilityOfElementLocated(By
                 .cssSelector(String.format("div.listSubject[title='%s']", uniqueName)))).click();
     }
@@ -46,12 +48,15 @@ public class DocumentsPage {
         }
     }
 
-    public void deleteDocument() {
-        WebElement elementToDelete = wait.until(ExpectedConditions.visibilityOfElementLocated(deleteElementLocator));
+    public void deleteEmailFromDocument(String uniqueName) {
+        WebElement elementToDelete = wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(String.format("//div[contains(@title, '%s')]",uniqueName))));
+
         Actions actions = new Actions(driver);
         actions.contextClick(elementToDelete).perform();
 
-        WebElement deleteFromDocumentElement = wait.until(ExpectedConditions.visibilityOfElementLocated(deleteFromDocumentElementLocator));
+        WebElement deleteFromDocumentElement = wait
+                .until(ExpectedConditions.visibilityOfElementLocated(deleteFromDocumentElementLocator));
         deleteFromDocumentElement.click();
     }
 }

@@ -1,4 +1,4 @@
-package org.example;
+package org.example.utils;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -21,6 +21,10 @@ public class Config {
 
     public static String getPassword() {
         return properties.getProperty("password");
+    }
+
+    public static String getEmail() {
+        return properties.getProperty("email");
     }
 }
 

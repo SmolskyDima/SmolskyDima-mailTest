@@ -1,3 +1,5 @@
+package org.example.pages;
+
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
@@ -37,7 +39,7 @@ public class LoginPage {
     }
 
     public boolean isLoggedIn() {
-        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(30));
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         WebElement lettersButtonElement = wait
                 .until(ExpectedConditions.visibilityOfElementLocated(lettersButtonLocator));
         return lettersButtonElement.isDisplayed();
