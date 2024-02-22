@@ -3,7 +3,6 @@ import org.example.utils.TemporaryFileCreator;
 import org.example.utils.Config;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
-import org.example.pages.FileActionsPage;
 import org.example.pages.LoginPage;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
@@ -18,19 +17,19 @@ import java.nio.file.Path;
 import java.time.Duration;
 
 import static org.example.utils.ScreenshotsManager.takeScreenshot;
+import static org.example.utils.ScreenshotsManager.takeSource;
 
 
 public class MailFenceAutomationTest {
 
     private WebDriver driver;
-    Path filePath = new TemporaryFileCreator().createTempFile();
+    Path filePath = TemporaryFileCreator.createTempFile();
     String subjectOfEmail = FileManager.extractFileName(filePath);
     private static final String MAIL_URL = "https://mailfence.com";
 
 
     @BeforeClass
     public void setUp() {
-
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
@@ -45,12 +44,10 @@ public class MailFenceAutomationTest {
     public void mailFenceAutomationTest() {
 
         LoginPage loginPage = new LoginPage(driver);
-        EmailPage emailPage = new EmailPage(driver);
-        DocumentsPage documentsPage = new DocumentsPage(driver);
-        FileActionsPage fileActionsPage = new FileActionsPage(driver);
         loginPage.clickLoginButton();
         loginPage.loginAsUser(Config.getUsername(), Config.getPassword());
-        loginPage.verifyLogin();
+        EmailPage emailPage = new EmailPage(driver);
+        emailPage.verifyLogin();
         emailPage.clickLettersButton();
         emailPage.clickNewLetterButton();
         emailPage.enterRecipientEmail(Config.getEmail());
@@ -58,11 +55,11 @@ public class MailFenceAutomationTest {
         emailPage.verifyFileLoading();
         emailPage.setEmailSubject(subjectOfEmail);
         emailPage.clickSendLetterButton();
-        documentsPage.waitUntilEmailReceived(subjectOfEmail);
-        fileActionsPage.clickAttachedFileInDocument();
-        fileActionsPage.clickMyDocuments();
-        fileActionsPage.waitForSaveButtonToBeClickable();
-        fileActionsPage.clickSaveButton();
+        emailPage.waitUntilEmailReceived(subjectOfEmail);
+        emailPage.clickAttachedFileInDocument();
+        emailPage.clickMyDocumentsInModalWindow();
+        emailPage.clickSaveButton();
+        DocumentsPage documentsPage = new DocumentsPage(driver);
         documentsPage.clickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
         documentsPage.deleteEmailFromDocument(subjectOfEmail);
@@ -70,10 +67,10 @@ public class MailFenceAutomationTest {
 
     @AfterMethod
     public void takeScreenshotOnFailure(ITestResult result) {
-        if (result.getStatus() == ITestResult.FAILURE) {
+        if (!result.isSuccess()) {
             takeScreenshot(driver);
+            takeSource(driver);
         }
-
     }
 
     @AfterClass

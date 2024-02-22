@@ -14,7 +14,6 @@ import java.nio.file.Paths;
 public class ScreenshotsManager {
 
     private static final String SCREENSHOTS_DIR = "src/test/java/screenshots";
-    private static int screenshotCounter = 0;
 
     public static void takeScreenshot(WebDriver driver) {
 
@@ -30,7 +29,7 @@ public class ScreenshotsManager {
                 return;
             }
         }
-        String screenshotName = "screenshot_" + screenshotCounter + ".png";
+        String screenshotName = "screenshot.png";
         String screenshotPath = Paths.get(screenshotsDirectory, screenshotName).toString();
         TakesScreenshot screenshot = (TakesScreenshot) driver;
         File srcFile = screenshot.getScreenshotAs(OutputType.FILE);
@@ -42,10 +41,14 @@ public class ScreenshotsManager {
             System.out.println("Не удалось сохранить скриншот: " + e.getMessage());
         }
 
-        screenshotCounter++;
 
+    }
+
+    public static void takeSource(WebDriver driver) {
+
+        String screenshotsDirectory = Paths.get(SCREENSHOTS_DIR).toString();
         String pageSource = driver.getPageSource();
-        String pageSourceName = "page_source_" + screenshotCounter + ".html";
+        String pageSourceName = "page_source.html";
         String pageSourcePath = Paths.get(screenshotsDirectory, pageSourceName).toString();
         try {
             Files.write(Paths.get(pageSourcePath), pageSource.getBytes());

@@ -6,7 +6,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 
 public class TemporaryFileCreator {
-    public Path createTempFile() {
+    public static Path createTempFile() {
         try {
             Path tempFilePath = Files.createTempFile(null, ".txt");
             try (FileWriter writer = new FileWriter(tempFilePath.toFile())) {
