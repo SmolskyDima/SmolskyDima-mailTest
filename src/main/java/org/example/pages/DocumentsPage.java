@@ -12,20 +12,21 @@ public class DocumentsPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final NavigationBar navigationBar = new NavigationBar();
-
+    private final NavigationBar navigationBar;
     private final By deleteFromDocumentElementLocator = By.xpath("//span[text()='Удалить']");
+    private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
 
 
     public DocumentsPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.navigationBar = new NavigationBar(driver);
     }
 
     public void clickDocumentsButton() {
-        WebElement docsButton = driver.findElement(navigationBar.getDocsButton());
+        WebElement docsButton = navigationBar.getDocumentsButton();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
-        wait.until(ExpectedConditions.invisibilityOfElementLocated(By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY")));
+        wait.until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear));
         docsButton.click();
     }
 

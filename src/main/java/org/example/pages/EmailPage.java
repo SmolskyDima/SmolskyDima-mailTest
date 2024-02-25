@@ -1,11 +1,9 @@
 package org.example.pages;
 
 import org.example.pages.pagecomponents.SaveInDocumentsModalWindow;
-import org.example.pages.pagecomponents.NavigationBar;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
-import org.testng.Assert;
 
 import java.nio.file.Path;
 import java.time.Duration;
@@ -15,7 +13,6 @@ public class EmailPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final SaveInDocumentsModalWindow saveInDocumentsModalWindow;
-    private final NavigationBar navigationBar = new NavigationBar();
     private final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
     private final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
     private final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
@@ -29,28 +26,14 @@ public class EmailPage {
     private final By saveInDocumentLocator = By.xpath("//span[@class and text()='Сохранить в документах']");
 
 
-
     public EmailPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
         this.saveInDocumentsModalWindow = new SaveInDocumentsModalWindow(driver);
     }
 
-    public void verifyLogin() {
-
-        WebElement lettersButtonElement = wait
-                .until(ExpectedConditions.visibilityOfElementLocated(navigationBar.getLettersButton()));
-        boolean displayed = lettersButtonElement.isDisplayed();
-        Assert.assertTrue(displayed, "Login was unsuccessful");
-
-    }
-
     public void clickNewLetterButton() {
         driver.findElement(newLetterButtonLocator).click();
-    }
-
-    public void clickLettersButton() {
-        driver.findElement(navigationBar.getLettersButton()).click();
     }
 
     public void enterRecipientEmail(String recipient) {
@@ -66,7 +49,7 @@ public class EmailPage {
 
     }
 
-    public void verifyFileLoading() {
+    public void verifyThatFileIsLoaded() {
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(fileUploadCheckboxLocator));
         } catch (TimeoutException e) {

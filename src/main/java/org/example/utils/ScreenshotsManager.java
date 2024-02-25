@@ -40,8 +40,6 @@ public class ScreenshotsManager {
         } catch (IOException e) {
             System.out.println("Не удалось сохранить скриншот: " + e.getMessage());
         }
-
-
     }
 
     public static void takeSource(WebDriver driver) {
