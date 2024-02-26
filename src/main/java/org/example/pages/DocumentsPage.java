@@ -23,6 +23,10 @@ public class DocumentsPage {
         this.navigationBar = new NavigationBar(driver);
     }
 
+    public NavigationBar getNavigationBar() {
+        return navigationBar;
+    }
+
     public void clickDocumentsButton() {
         WebElement docsButton = navigationBar.getDocumentsButton();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
@@ -38,7 +42,7 @@ public class DocumentsPage {
         }
     }
 
-    public void deleteEmailFromDocument(String uniqueName) {
+    public void deleteEmailFromDocumentWithRightClick(String uniqueName) {
         WebElement elementToDelete = wait.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath(String.format("//div[contains(@title, '%s')]", uniqueName))));
 

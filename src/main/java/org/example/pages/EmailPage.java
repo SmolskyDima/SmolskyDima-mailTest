@@ -1,6 +1,6 @@
 package org.example.pages;
 
-import org.example.pages.pagecomponents.SaveInDocumentsModalWindow;
+import org.example.pages.pagecomponents.SaveDocumentInModalWindow;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,7 +12,7 @@ public class EmailPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final SaveInDocumentsModalWindow saveInDocumentsModalWindow;
+    private final SaveDocumentInModalWindow saveDocumentInModalWindow;
     private final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
     private final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
     private final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
@@ -29,7 +29,7 @@ public class EmailPage {
     public EmailPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        this.saveInDocumentsModalWindow = new SaveInDocumentsModalWindow(driver);
+        this.saveDocumentInModalWindow = new SaveDocumentInModalWindow(driver);
     }
 
     public void clickNewLetterButton() {
@@ -89,11 +89,9 @@ public class EmailPage {
         driver.findElement(saveInDocumentLocator).click();
     }
 
-    public void clickMyDocumentsInModalWindow() {
-        saveInDocumentsModalWindow.clickMyDocuments();
+    public SaveDocumentInModalWindow getSaveDocumentInModalWindow() {
+        return saveDocumentInModalWindow;
     }
 
-    public void clickSaveButton() {
-        saveInDocumentsModalWindow.clickSaveButtonInModalWindow();
-    }
+
 }

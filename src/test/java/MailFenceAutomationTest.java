@@ -1,5 +1,4 @@
 import org.example.entity.User;
-import org.example.utils.FileManager;
 import org.example.utils.TemporaryFileCreator;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
@@ -19,15 +18,16 @@ import java.time.Duration;
 
 import static org.example.utils.ScreenshotsManager.takeScreenshot;
 import static org.example.utils.ScreenshotsManager.takeSource;
+import static org.example.utils.UserManager.getUserByName;
 
 
 public class MailFenceAutomationTest {
 
-    private UserManager userManager;
     private WebDriver driver;
     Path filePath = TemporaryFileCreator.createTempFile();
-    String subjectOfEmail = FileManager.extractFileName(filePath);
+    String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
+    User user = getUserByName("Smolskydima");
 
 
     @BeforeClass
@@ -39,14 +39,12 @@ public class MailFenceAutomationTest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get(MAIL_URL);
-
-        userManager = UserManager.getUserManager();
+        UserManager.getUserManager().initializeUsers();
     }
 
     @Test
     public void mailFenceAutomationTest() {
 
-        User user = userManager.getUserByName("admin");
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
@@ -58,12 +56,12 @@ public class MailFenceAutomationTest {
         emailPage.clickSendLetterButton();
         emailPage.waitUntilEmailReceived(subjectOfEmail);
         emailPage.clickAttachedFileInDocument();
-        emailPage.clickMyDocumentsInModalWindow();
-        emailPage.clickSaveButton();
+        emailPage.getSaveDocumentInModalWindow().clickSaveButtonInModalWindow();
+        emailPage.getSaveDocumentInModalWindow().clickMyDocuments();
         DocumentsPage documentsPage = new DocumentsPage(driver);
         documentsPage.clickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
-        documentsPage.deleteEmailFromDocument(subjectOfEmail);
+        documentsPage.deleteEmailFromDocumentWithRightClick(subjectOfEmail);
     }
 
     @AfterMethod

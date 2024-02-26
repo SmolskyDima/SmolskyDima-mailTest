@@ -1,21 +1,22 @@
 package org.example.utils;
 
+import com.fasterxml.jackson.databind.ObjectMapper;
 import org.example.entity.User;
 
+import java.io.File;
 import java.io.IOException;
+import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
-import java.util.Properties;
 
 public class UserManager {
 
     private volatile static UserManager userManager;
-    private Map<String, User> users;
-    private static final String CONFIG_FILE = "config.properties";
+    private static Map<String, User> users;
+    private static final String USERS_FILE = "src/main/resources/users.json";
 
-    private UserManager() {
-        users = new HashMap<>();
-        loadUsersFromConfigFile();
+    public void initializeUsers() {
+        users = loadUsersFromJsonFile();
     }
 
     public static UserManager getUserManager() {
@@ -29,26 +30,25 @@ public class UserManager {
         return userManager;
     }
 
-    private void loadUsersFromConfigFile() {
-        Properties userData = new Properties();
+    private Map<String, User> loadUsersFromJsonFile() {
+        ObjectMapper mapper = new ObjectMapper();
         try {
-            userData.load(UserManager.class.getClassLoader().getResourceAsStream(CONFIG_FILE));
-            for (String key : userData.stringPropertyNames()) {
-                if (key.startsWith("testuser")) {
-                    String username = userData.getProperty(key);
-                    String userIndex = key.substring(8);
-                    String usernameValue = userData.getProperty("username" + userIndex);
-                    String passwordValue = userData.getProperty("password" + userIndex);
-                    String emailValue = userData.getProperty("email" + userIndex);
-                    users.put(username, new User(usernameValue, passwordValue, emailValue));
+            File file = new File(USERS_FILE);
+            if (file.exists()) {
+                User[] userList = mapper.readValue(file, User[].class);
+                Map<String, User> userMap = new HashMap<>();
+                for (User user : userList) {
+                    userMap.put(user.getName(), user);
                 }
+                return userMap;
             }
         } catch (IOException e) {
             e.printStackTrace();
         }
+        return new HashMap<>();
     }
 
-    public User getUserByName(String username) {
+    public static User getUserByName(String username) {
         return users.get(username);
     }
 }
