@@ -33,10 +33,16 @@ public class UserManager {
         Properties userData = new Properties();
         try {
             userData.load(UserManager.class.getClassLoader().getResourceAsStream(CONFIG_FILE));
-            String username = userData.getProperty("username");
-            String password = userData.getProperty("password");
-            String email = userData.getProperty("email");
-            users.put("username", new User(username, password, email));
+            for (String key : userData.stringPropertyNames()) {
+                if (key.startsWith("testuser")) {
+                    String username = userData.getProperty(key);
+                    String userIndex = key.substring(8);
+                    String usernameValue = userData.getProperty("username" + userIndex);
+                    String passwordValue = userData.getProperty("password" + userIndex);
+                    String emailValue = userData.getProperty("email" + userIndex);
+                    users.put(username, new User(usernameValue, passwordValue, emailValue));
+                }
+            }
         } catch (IOException e) {
             e.printStackTrace();
         }

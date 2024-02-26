@@ -23,11 +23,11 @@ public class LoginPage {
         this.navigationBar = new NavigationBar(driver);
     }
 
-    public WebElement getUserName() {
+    public WebElement getUserNameInputField() {
         return driver.findElement(userNameLocator);
     }
 
-    public WebElement getUserPassword() {
+    public WebElement getUserPasswordInputField() {
         return driver.findElement(userPasswordLocator);
     }
 
@@ -37,8 +37,8 @@ public class LoginPage {
 
     public void loginAsUser(String username, String password) {
         try {
-            getUserName().sendKeys(username);
-            getUserPassword().sendKeys(password);
+            getUserNameInputField().sendKeys(username);
+            getUserPasswordInputField().sendKeys(password);
             getEnterButton().click();
 
             WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(10));

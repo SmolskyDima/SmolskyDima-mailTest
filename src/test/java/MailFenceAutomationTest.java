@@ -46,7 +46,7 @@ public class MailFenceAutomationTest {
     @Test
     public void mailFenceAutomationTest() {
 
-        User user = userManager.getUserByName("username");
+        User user = userManager.getUserByName("admin");
         LoginPage loginPage = new LoginPage(driver);
         loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
