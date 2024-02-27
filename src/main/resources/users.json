@@ -1,12 +1,7 @@
 [
   {
-    "name": "*****",
-    "password": "*****",
-    "email": "*****@mailfence.com"
-  },
-  {
-    "name": "Alice",
-    "password": "pass456",
-    "email": "alice@example.com"
+    "id" : "testUser",
+    "name": "Smolskydima",
+    "email": "Smolskydima@mailfence.com"
   }
 ]
