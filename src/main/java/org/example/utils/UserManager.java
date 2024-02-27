@@ -30,7 +30,7 @@ public class UserManager {
                 User[] userList = mapper.readValue(file, User[].class);
                 Map<String, User> userMap = new HashMap<>();
                 for (User user : userList) {
-                    userMap.put(user.getName(), user);
+                    userMap.put(user.getId(), user);
                 }
                 return userMap;
             }
@@ -40,7 +40,8 @@ public class UserManager {
         return new HashMap<>();
     }
 
-    public static User getUserByName(String username) {
-        return users.get(username);
+
+    public static User getUserById(String userId) {
+        return users.get(userId);
     }
 }

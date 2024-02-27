@@ -3,7 +3,6 @@ import org.example.utils.TemporaryFileCreator;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
 import org.example.pages.LoginPage;
-import org.example.utils.UserManager;
 import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
@@ -18,17 +17,17 @@ import java.time.Duration;
 
 import static org.example.utils.ScreenshotsManager.takeScreenshot;
 import static org.example.utils.ScreenshotsManager.takeSource;
-import static org.example.utils.UserManager.getUserByName;
+import static org.example.utils.UserManager.getUserById;
 
 
 public class MailFenceAutomationTest {
+
 
     private WebDriver driver;
     Path filePath = TemporaryFileCreator.createTempFile();
     String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
-    User user = getUserByName("Smolskydima");
-
+    User user = getUserById("testUser");
 
     @BeforeClass
     public void setUp() {
