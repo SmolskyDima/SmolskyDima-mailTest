@@ -22,7 +22,6 @@ import static org.example.utils.UserManager.getUserById;
 
 public class MailFenceAutomationTest {
 
-
     private WebDriver driver;
     Path filePath = TemporaryFileCreator.createTempFile();
     String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
@@ -45,7 +44,7 @@ public class MailFenceAutomationTest {
     public void mailFenceAutomationTest() {
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.loginAsUser(user.getName(), user.getPassword());
+        loginPage.loginAsUser(user.getName(), System.getenv("PASSWORD"));
         EmailPage emailPage = new EmailPage(driver);
         emailPage.clickNewLetterButton();
         emailPage.enterRecipientEmail(user.getEmail());
