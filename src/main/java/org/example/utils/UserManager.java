@@ -5,7 +5,6 @@ import org.example.entity.User;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.Arrays;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -15,11 +14,16 @@ public class UserManager {
     private static Map<String, User> users;
     private static final String USERS_FILE = "src/main/resources/users.json";
 
-    public void initializeUsers() {
+    static {
+        initializeUsers();
+    }
+
+    public static void initializeUsers() {
         users = loadUsersFromJsonFile();
     }
 
     public static UserManager getUserManager() {
+
         if (userManager == null) {
             synchronized (UserManager.class) {
                 if (userManager == null) {
@@ -30,7 +34,7 @@ public class UserManager {
         return userManager;
     }
 
-    private Map<String, User> loadUsersFromJsonFile() {
+    private static Map<String, User> loadUsersFromJsonFile() {
         ObjectMapper mapper = new ObjectMapper();
         try {
             File file = new File(USERS_FILE);
