@@ -39,7 +39,7 @@ public class MailFenceAutomationTest {
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get(MAIL_URL);
-        UserManager.getUserManager().initializeUsers();
+
     }
 
     @Test

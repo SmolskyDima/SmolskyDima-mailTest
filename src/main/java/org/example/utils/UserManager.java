@@ -22,18 +22,6 @@ public class UserManager {
         users = loadUsersFromJsonFile();
     }
 
-    public static UserManager getUserManager() {
-
-        if (userManager == null) {
-            synchronized (UserManager.class) {
-                if (userManager == null) {
-                    userManager = new UserManager();
-                }
-            }
-        }
-        return userManager;
-    }
-
     private static Map<String, User> loadUsersFromJsonFile() {
         ObjectMapper mapper = new ObjectMapper();
         try {
