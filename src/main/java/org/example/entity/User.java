@@ -4,16 +4,14 @@ public class User {
 
     private String id;
     private String name;
-    private String password;
     private String email;
 
     public User() {
     }
 
-    public User(String id, String name, String password, String email) {
+    public User(String id, String name, String email) {
         this.id = id;
         this.name = name;
-        this.password = password;
         this.email = email;
     }
 
@@ -34,11 +32,7 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
-    }
-
-    public void setPassword(String password) {
-        this.password = password;
+        return System.getenv("PASSWORD");
     }
 
     public String getEmail() {
