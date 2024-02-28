@@ -23,9 +23,9 @@ public class ScreenshotsManager {
         if (!Files.exists(screenshotsPath)) {
             try {
                 Files.createDirectories(screenshotsPath);
-                System.out.println("Директория для скриншотов создана: " + screenshotsPath);
+                System.out.println("Directory for screenshots created: " + screenshotsPath);
             } catch (IOException e) {
-                System.out.println("Не удалось создать директорию для скриншотов: " + e.getMessage());
+                System.out.println("Directory for screenshots wasn't created: " + e.getMessage());
                 return;
             }
         }
@@ -36,9 +36,9 @@ public class ScreenshotsManager {
 
         try {
             FileUtils.copyFile(srcFile, new File(screenshotPath));
-            System.out.println("Скриншот сохранен: " + screenshotPath);
+            System.out.println("Screenshot saved: " + screenshotPath);
         } catch (IOException e) {
-            System.out.println("Не удалось сохранить скриншот: " + e.getMessage());
+            System.out.println("Screenshot didn't saved: " + e.getMessage());
         }
     }
 
@@ -50,9 +50,9 @@ public class ScreenshotsManager {
         String pageSourcePath = Paths.get(screenshotsDirectory, pageSourceName).toString();
         try {
             Files.write(Paths.get(pageSourcePath), pageSource.getBytes());
-            System.out.println("Исходный код страницы сохранен: " + pageSourcePath);
+            System.out.println("Page source code saved: " + pageSourcePath);
         } catch (IOException e) {
-            System.out.println("Не удалось сохранить исходный код страницы: " + e.getMessage());
+            System.out.println("Could not save the page source code: " + e.getMessage());
         }
     }
 }

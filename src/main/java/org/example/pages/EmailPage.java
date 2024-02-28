@@ -91,7 +91,7 @@ public class EmailPage {
                 .cssSelector(String.format("div.listSubject[title='%s']", uniqueName)))).click();
     }
 
-    public void clickAttachedFileInDocument() {
+    public void clickSaveDocumentButton() {
         WebElement toggleButton = driver.findElement(toggleButtonLocator);
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", toggleButton);
