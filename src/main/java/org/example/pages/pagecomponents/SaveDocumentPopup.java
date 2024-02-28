@@ -7,13 +7,13 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
 
-public class SaveDocumentPopUp {
+public class SaveDocumentPopup {
 
     private final WebDriverWait wait;
     private final By myDocumentLocator = By.xpath("//div[text()='Мои документы']");
     private final By saveButtonLocator = By.xpath("//div[@id='dialBtn_OK']");
 
-    public SaveDocumentPopUp(WebDriver driver) {
+    public SaveDocumentPopup(WebDriver driver) {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
 
     }

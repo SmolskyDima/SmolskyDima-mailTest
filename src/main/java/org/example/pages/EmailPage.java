@@ -1,6 +1,6 @@
 package org.example.pages;
 
-import org.example.pages.pagecomponents.SaveDocumentPopUp;
+import org.example.pages.pagecomponents.SaveDocumentPopup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
@@ -12,7 +12,7 @@ public class EmailPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final SaveDocumentPopUp saveDocumentPopUp;
+    private final SaveDocumentPopup saveDocumentPopUp;
     private final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
     private final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
     private final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
@@ -29,7 +29,16 @@ public class EmailPage {
     public EmailPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        this.saveDocumentPopUp = new SaveDocumentPopUp(driver);
+        this.saveDocumentPopUp = new SaveDocumentPopup(driver);
+    }
+
+    public boolean isLoginSuccessful() {
+        try {
+            wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
+        }
     }
 
     public void clickNewLetterButton() {
@@ -89,7 +98,7 @@ public class EmailPage {
         driver.findElement(saveInDocumentLocator).click();
     }
 
-    public SaveDocumentPopUp saveDocumentPopUp() {
+    public SaveDocumentPopup saveDocumentPopup() {
         return saveDocumentPopUp;
     }
 
