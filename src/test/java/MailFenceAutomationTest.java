@@ -44,7 +44,7 @@ public class MailFenceAutomationTest {
     public void mailFenceAutomationTest() {
 
         LoginPage loginPage = new LoginPage(driver);
-        loginPage.loginAsUser(user.getName(), System.getenv("PASSWORD"));
+        loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
         emailPage.clickNewLetterButton();
         emailPage.enterRecipientEmail(user.getEmail());
