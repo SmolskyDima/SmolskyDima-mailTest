@@ -54,8 +54,8 @@ public class MailFenceAutomationTest {
         emailPage.clickSendLetterButton();
         emailPage.waitUntilEmailReceived(subjectOfEmail);
         emailPage.clickAttachedFileInDocument();
-        emailPage.getSaveDocumentInModalWindow().clickSaveButtonInModalWindow();
-        emailPage.getSaveDocumentInModalWindow().clickMyDocuments();
+        emailPage.saveDocumentPopUp().clickSaveButtonInModalWindow();
+        emailPage.saveDocumentPopUp().clickMyDocuments();
         DocumentsPage documentsPage = new DocumentsPage(driver);
         documentsPage.clickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
