@@ -30,47 +30,47 @@ public class EmailPage {
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
     }
 
-    public WebElement getRefreshIncomingLettersLocator() {
+    public WebElement getRefreshIncomingLettersButton() {
         return driver.findElement(refreshIncomingLettersLocator);
     }
 
-    public WebElement getNewLetterButtonLocator() {
+    public WebElement getNewLetterButton() {
         return driver.findElement(newLetterButtonLocator);
     }
 
-    public WebElement getRecipientTextBoxLocator() {
+    public WebElement getRecipientTextBox() {
         return driver.findElement(recipientTextBoxLocator);
     }
 
-    public WebElement getInputLocator() {
+    public WebElement getInputButton() {
         return driver.findElement(inputLocator);
     }
 
-    public WebElement getAttachmentInputLocator() {
+    public WebElement getAttachmentInputButton() {
         return driver.findElement(attachmentInputLocator);
     }
 
-    public WebElement getFileUploadCheckboxLocator() {
+    public WebElement getFileUploadCheckbox() {
         return driver.findElement(fileUploadCheckboxLocator);
     }
 
-    public WebElement getFileUploadProgressBarLocator() {
+    public WebElement getFileUploadProgressBar() {
         return driver.findElement(fileUploadProgressBarLocator);
     }
 
-    public WebElement getMailSubjectTextLocator() {
+    public WebElement getMailSubjectTextInput() {
         return driver.findElement(mailSubjectTextLocator);
     }
 
-    public WebElement getSendLetterLocator() {
+    public WebElement getSendLetterButton() {
         return driver.findElement(sendLetterLocator);
     }
 
-    public WebElement getToggleButtonLocator() {
+    public WebElement getToggleButton() {
         return driver.findElement(toggleButtonLocator);
     }
 
-    public WebElement getSaveInDocumentLocator() {
+    public WebElement getSaveInDocumentButton() {
         return driver.findElement(saveInDocumentLocator);
     }
 
@@ -84,18 +84,18 @@ public class EmailPage {
     }
 
     public void clickNewLetterButton() {
-        getNewLetterButtonLocator().click();
+        getNewLetterButton().click();
     }
 
     public void enterRecipientEmail(String recipient) {
-        WebElement emailTo = getRecipientTextBoxLocator();
+        WebElement emailTo = getRecipientTextBox();
         emailTo.sendKeys(recipient, Keys.ENTER);
     }
 
     public void attachFileToEmail(Path filePath) {
-        getInputLocator().click();
+        getInputButton().click();
         String string = filePath.toAbsolutePath().toString();
-        WebElement attachmentInput = getAttachmentInputLocator();
+        WebElement attachmentInput = getAttachmentInputButton();
         attachmentInput.sendKeys(string);
 
     }
@@ -114,12 +114,12 @@ public class EmailPage {
     }
 
     public void setEmailSubject(String emailSubject) {
-        WebElement mailSubject = getMailSubjectTextLocator();
+        WebElement mailSubject = getMailSubjectTextInput();
         mailSubject.sendKeys(emailSubject);
     }
 
     public void clickSendLetterButton() {
-        getSendLetterLocator().click();
+        getSendLetterButton().click();
     }
 
     public void waitUntilEmailReceived(String uniqueName) {
@@ -134,10 +134,10 @@ public class EmailPage {
     }
 
     public void clickSaveDocumentButton() {
-        WebElement toggleButton = getToggleButtonLocator();
+        WebElement toggleButton = getToggleButton();
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", toggleButton);
-        getSaveInDocumentLocator().click();
+        getSaveInDocumentButton().click();
     }
 
     public SaveDocumentPopup getSaveDocumentPopup() {
