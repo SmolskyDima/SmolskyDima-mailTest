@@ -75,7 +75,7 @@ public class EmailPage {
     public WebElement getSaveInDocumentLocator() {
         return driver.findElement(saveInDocumentLocator);
     }
-    public boolean isLoginSuccessful() {
+    public boolean isPageOpened() {
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator));
             return true;
