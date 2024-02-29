@@ -12,24 +12,22 @@ public class EmailPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
-    private final SaveDocumentPopup saveDocumentPopUp;
-    private  static final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
-    private  static final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
-    private  static final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
-    private  static final By inputLocator = By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB");
-    private  static final By attachmentInputLocator = By.cssSelector("input[type='file'][name^='docgwt-uid-']");
-    private  static final By fileUploadCheckboxLocator = By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']");
-    private  static final By fileUploadProgressBarLocator = By.xpath("//div[@class='GCSDBRWBCS']");
-    private  static final By mailSubjectTextLocator = By.id("mailSubject");
-    private static  final By sendLetterLocator = By.xpath("//div[text()='Отправить']");
-    private static  final By toggleButtonLocator = By.xpath("//b[@class='icon-Arrow-down']");
-    private static  final By saveInDocumentLocator = By.xpath("//span[@class and text()='Сохранить в документах']");
+    private static final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
+    private static final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
+    private static final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
+    private static final By inputLocator = By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB");
+    private static final By attachmentInputLocator = By.cssSelector("input[type='file'][name^='docgwt-uid-']");
+    private static final By fileUploadCheckboxLocator = By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']");
+    private static final By fileUploadProgressBarLocator = By.xpath("//div[@class='GCSDBRWBCS']");
+    private static final By mailSubjectTextLocator = By.id("mailSubject");
+    private static final By sendLetterLocator = By.xpath("//div[text()='Отправить']");
+    private static final By toggleButtonLocator = By.xpath("//b[@class='icon-Arrow-down']");
+    private static final By saveInDocumentLocator = By.xpath("//span[@class and text()='Сохранить в документах']");
 
 
     public EmailPage(WebDriver driver) {
         this.driver = driver;
         this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        this.saveDocumentPopUp = new SaveDocumentPopup(driver);
     }
 
     public WebElement getRefreshIncomingLettersLocator() {
@@ -75,6 +73,7 @@ public class EmailPage {
     public WebElement getSaveInDocumentLocator() {
         return driver.findElement(saveInDocumentLocator);
     }
+
     public boolean isPageOpened() {
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator));
@@ -141,9 +140,7 @@ public class EmailPage {
         getSaveInDocumentLocator().click();
     }
 
-    public SaveDocumentPopup saveDocumentPopup() {
-        return saveDocumentPopUp;
+    public SaveDocumentPopup getSaveDocumentPopup() {
+        return new SaveDocumentPopup(driver);
     }
-
-
 }
