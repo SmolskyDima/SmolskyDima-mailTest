@@ -23,16 +23,16 @@ public class DocumentsPage {
         this.navigationBar = new NavigationBar(driver);
     }
 
-    public WebElement getDeleteFromDocumentElementLocator() {
+    public WebElement getDeleteFromDocumentElementButton() {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(deleteFromDocumentElementLocator));
     }
 
-    public void clickDocumentsButton() {
+    public void getClickDocumentsButton() {
         WebElement docsButton = navigationBar.getDocumentsButton();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
         Boolean until = wait.until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear));
         if (!until) {
-            System.out.println("Element can not be clickable");
+            System.out.println("Element is not clickable");
         }
         docsButton.click();
     }
@@ -52,7 +52,7 @@ public class DocumentsPage {
         Actions actions = new Actions(driver);
         actions.contextClick(elementToDelete).perform();
 
-        WebElement deleteFromDocumentElement = getDeleteFromDocumentElementLocator();
+        WebElement deleteFromDocumentElement = getDeleteFromDocumentElementButton();
         deleteFromDocumentElement.click();
     }
 }

@@ -57,7 +57,7 @@ public class MailFenceAutomationTest {
         emailPage.getSaveDocumentPopup().clickSaveButtonInModalWindow();
         emailPage.getSaveDocumentPopup().clickMyDocuments();
         DocumentsPage documentsPage = new DocumentsPage(driver);
-        documentsPage.clickDocumentsButton();
+        documentsPage.getClickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
         documentsPage.deleteEmailFromDocumentWithRightClick(subjectOfEmail);
     }
