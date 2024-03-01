@@ -14,10 +14,6 @@ public class UserManager {
     private static final String USERS_FILE = "src/main/resources/users.json";
 
     static {
-        initializeUsers();
-    }
-
-    public static void initializeUsers() {
         users = loadUsersFromJsonFile();
     }
 
