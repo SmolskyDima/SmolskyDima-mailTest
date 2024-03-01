@@ -10,7 +10,7 @@ import java.util.Map;
 
 public class UserManager {
 
-    private static Map<String, User> users;
+    private static final Map<String, User> users;
     private static final String USERS_FILE = "src/main/resources/users.json";
 
     static {

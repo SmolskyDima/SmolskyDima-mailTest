@@ -23,7 +23,7 @@ public class EmailPage {
     private static final By sendLetterLocator = By.xpath("//div[text()='Отправить']");
     private static final By toggleButtonLocator = By.xpath("//b[@class='icon-Arrow-down']");
     private static final By saveInDocumentLocator = By.xpath("//span[@class and text()='Сохранить в документах']");
-
+    private final String receivedElementLocator = "//div[@class='listSubject' and contains(text(), '%s')]";
 
     public EmailPage(WebDriver driver) {
         this.driver = driver;
@@ -72,6 +72,11 @@ public class EmailPage {
 
     public WebElement getSaveInDocumentButton() {
         return driver.findElement(saveInDocumentLocator);
+    }
+
+    public WebElement getReceivedElement(String uniqueName) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(String.format(receivedElementLocator, uniqueName))));
     }
 
     public boolean isPageOpened() {
@@ -124,13 +129,11 @@ public class EmailPage {
 
     public void waitUntilEmailReceived(String uniqueName) {
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                    .xpath(String.format("//div[@class='listSubject' and contains(text(), '%s')]", uniqueName))));
+            getReceivedElement(uniqueName);
         } catch (TimeoutException e) {
             wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator)).click();
         }
-        wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .cssSelector(String.format("div.listSubject[title='%s']", uniqueName)))).click();
+        getReceivedElement(uniqueName).click();
     }
 
     public void clickSaveDocumentButton() {
