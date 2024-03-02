@@ -2,6 +2,7 @@ package org.example.pages.pagecomponents;
 
 import org.openqa.selenium.By;
 import org.openqa.selenium.WebDriver;
+import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
@@ -18,8 +19,12 @@ public class SaveDocumentPopup {
 
     }
 
+    public WebElement getMyDocumentButton(){
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(myDocumentLocator));
+    }
+
     public void clickMyDocuments() {
-        wait.until(ExpectedConditions.visibilityOfElementLocated(myDocumentLocator)).click();
+        getMyDocumentButton().click();
     }
 
     public void clickSaveButtonInModalWindow() {
