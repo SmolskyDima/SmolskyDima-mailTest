@@ -93,8 +93,7 @@ public class EmailPage {
     }
 
     public void enterRecipientEmail(String recipient) {
-        WebElement emailTo = getRecipientTextBox();
-        emailTo.sendKeys(recipient, Keys.ENTER);
+        getRecipientTextBox().sendKeys(recipient, Keys.ENTER);
     }
 
     public void attachFileToEmail(Path filePath) {
@@ -119,8 +118,7 @@ public class EmailPage {
     }
 
     public void setEmailSubject(String emailSubject) {
-        WebElement mailSubject = getMailSubjectTextInput();
-        mailSubject.sendKeys(emailSubject);
+        getMailSubjectTextInput().sendKeys(emailSubject);
     }
 
     public void clickSendLetterButton() {
