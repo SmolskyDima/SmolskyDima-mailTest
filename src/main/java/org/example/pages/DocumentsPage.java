@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import org.example.pages.pagecomponents.ContextMenu;
 import org.example.pages.pagecomponents.NavigationBar;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
@@ -13,7 +14,6 @@ public class DocumentsPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final NavigationBar navigationBar;
-    private final By deleteFromDocumentElementLocator = By.xpath("//span[text()='Удалить']");
     private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
     private final String receivedElementLocator = "//div[contains(@title, '%s')]";
 
@@ -24,16 +24,18 @@ public class DocumentsPage {
         this.navigationBar = new NavigationBar(driver);
     }
 
-    public WebElement getDeleteFromDocumentElementButton() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(deleteFromDocumentElementLocator));
+    public WebElement getDeleteButton() {
+        ContextMenu contextMenu = new ContextMenu(driver);
+        return contextMenu.getDeleteElementButton();
     }
 
-    public void getClickDocumentsButton() {
+    public void clickDocumentsButton() {
         WebElement docsButton = navigationBar.getDocumentsButton();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
         Boolean until = wait.until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear));
         if (!until) {
             System.out.println("Element is not clickable");
+            return;
         }
         docsButton.click();
     }
@@ -55,7 +57,7 @@ public class DocumentsPage {
         Actions actions = new Actions(driver);
         actions.contextClick(getReceivedElement(uniqueName)).perform();
 
-        WebElement deleteFromDocumentElement = getDeleteFromDocumentElementButton();
+        WebElement deleteFromDocumentElement = getDeleteButton();
         deleteFromDocumentElement.click();
     }
 }
