@@ -27,7 +27,7 @@ public class SaveDocumentPopup {
         getMyDocumentButton().click();
     }
 
-    public void clickSaveButtonInModalWindow() {
+    public void clickSaveButton() {
         wait.until(ExpectedConditions.not(ExpectedConditions
                 .attributeContains(saveButtonLocator, "class", "GCSDBRWBMB")));
         wait.until(ExpectedConditions.visibilityOfElementLocated(saveButtonLocator)).click();
