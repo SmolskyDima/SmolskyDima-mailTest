@@ -59,7 +59,7 @@ public class MailFenceAutomationTest {
         DocumentsPage documentsPage = new DocumentsPage(driver);
         documentsPage.getClickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
-        documentsPage.deleteEmailFromDocumentWithRightClick(subjectOfEmail);
+        documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
     }
 
     @AfterMethod

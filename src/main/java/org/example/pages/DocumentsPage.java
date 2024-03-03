@@ -15,6 +15,7 @@ public class DocumentsPage {
     private final NavigationBar navigationBar;
     private final By deleteFromDocumentElementLocator = By.xpath("//span[text()='Удалить']");
     private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
+    private final String receivedElementLocator = "//div[contains(@title, '%s')]";
 
 
     public DocumentsPage(WebDriver driver) {
@@ -37,6 +38,11 @@ public class DocumentsPage {
         docsButton.click();
     }
 
+    public WebElement getReceivedElement(String uniqueName) {
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(By
+                .xpath(String.format(receivedElementLocator, uniqueName))));
+    }
+
     public void sleepForTwoSeconds() {
         try {
             Thread.sleep(2000);
@@ -45,12 +51,9 @@ public class DocumentsPage {
         }
     }
 
-    public void deleteEmailFromDocumentWithRightClick(String uniqueName) {
-        WebElement elementToDelete = wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath(String.format("//div[contains(@title, '%s')]", uniqueName))));
-
+    public void deleteEmailFromDocumentsWithRightClick(String uniqueName) {
         Actions actions = new Actions(driver);
-        actions.contextClick(elementToDelete).perform();
+        actions.contextClick(getReceivedElement(uniqueName)).perform();
 
         WebElement deleteFromDocumentElement = getDeleteFromDocumentElementButton();
         deleteFromDocumentElement.click();
