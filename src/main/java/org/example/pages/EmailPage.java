@@ -7,6 +7,7 @@ import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.nio.file.Path;
 import java.time.Duration;
+import java.util.NoSuchElementException;
 
 public class EmailPage {
 
@@ -126,12 +127,20 @@ public class EmailPage {
     }
 
     public void waitUntilEmailReceived(String uniqueName) {
-        try {
-            getReceivedElement(uniqueName);
-        } catch (TimeoutException e) {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator)).click();
+        boolean elementFound = false;
+        while (!elementFound) {
+            try {
+                getReceivedElement(uniqueName).click();
+                elementFound = true;
+            } catch (TimeoutException e) {
+                try {
+                    driver.findElement(refreshIncomingLettersLocator).click();
+                    Thread.sleep(1000);
+                } catch (InterruptedException ex) {
+                    Thread.currentThread().interrupt();
+                }
+            }
         }
-        getReceivedElement(uniqueName).click();
     }
 
     public void clickSaveDocumentButton() {
