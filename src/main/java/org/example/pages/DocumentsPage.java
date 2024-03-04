@@ -1,11 +1,13 @@
 package org.example.pages;
 
 import org.example.pages.pagecomponents.ContextMenu;
+import org.example.pages.pagecomponents.LeftPanel;
 import org.example.pages.pagecomponents.NavigationBar;
 import org.openqa.selenium.*;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.time.Duration;
 
@@ -16,6 +18,7 @@ public class DocumentsPage {
     private final NavigationBar navigationBar;
     private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
     private final String receivedElementLocator = "//div[contains(@title, '%s')]";
+    private final String trashElementLocator = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
 
 
     public DocumentsPage(WebDriver driver) {
@@ -59,5 +62,25 @@ public class DocumentsPage {
 
         WebElement deleteFromDocumentElement = getDeleteButton();
         deleteFromDocumentElement.click();
+    }
+
+    public void openTrash() {
+        LeftPanel leftPanel = new LeftPanel(driver);
+        leftPanel.getTrashButton().click();
+    }
+
+
+    private boolean isElementPresentInTrash(String uniqueName) {
+        try {
+            driver.findElement(By.xpath(String.format(trashElementLocator, uniqueName)));
+            return true;
+        } catch (NoSuchElementException e) {
+            return false;
+        }
+    }
+
+    public void assertElementIsPresentInTrash(String uniqueName) {
+        boolean isElementPresent = isElementPresentInTrash(uniqueName);
+        Assert.assertTrue(isElementPresent, "The element is not present in the Trash");
     }
 }
