@@ -54,12 +54,14 @@ public class MailFenceAutomationTest {
         emailPage.clickSendLetterButton();
         emailPage.waitUntilEmailReceived(subjectOfEmail);
         emailPage.clickSaveDocumentButton();
-        emailPage.getSaveDocumentPopup().clickSaveButton();
         emailPage.getSaveDocumentPopup().clickMyDocuments();
+        emailPage.getSaveDocumentPopup().clickSaveButton();
         DocumentsPage documentsPage = new DocumentsPage(driver);
         documentsPage.clickDocumentsButton();
         documentsPage.sleepForTwoSeconds();
         documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
+        documentsPage.openTrash();
+        documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
     }
 
     @AfterMethod
