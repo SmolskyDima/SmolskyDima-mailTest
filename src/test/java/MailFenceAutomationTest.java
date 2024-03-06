@@ -1,3 +1,5 @@
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.entity.User;
 import org.example.utils.TemporaryFileCreator;
 import org.example.pages.DocumentsPage;
@@ -27,6 +29,7 @@ public class MailFenceAutomationTest {
     String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
     User user = getUserById("testUser");
+    private static final Logger logger = LogManager.getLogger(MailFenceAutomationTest.class);
 
     @BeforeClass
     public void setUp() {
@@ -42,26 +45,41 @@ public class MailFenceAutomationTest {
 
     @Test
     public void mailFenceAutomationTest() {
-
+        logger.info("Start test method");
         LoginPage loginPage = new LoginPage(driver);
+        logger.info("Start method loginAsUser");
         loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
+        logger.info("Start method clickNewLetterButton");
         emailPage.clickNewLetterButton();
+        logger.info("Start method enterRecipientEmail");
         emailPage.enterRecipientEmail(user.getEmail());
+        logger.info("Start method attachFileToEmail");
         emailPage.attachFileToEmail(filePath);
+        logger.info("Start method verifyThatFileIsLoaded");
         emailPage.verifyThatFileIsLoaded();
+        logger.info("Start method setEmailSubject");
         emailPage.setEmailSubject(subjectOfEmail);
+        logger.info("Start method clickSendLetterButton");
         emailPage.clickSendLetterButton();
+        logger.info("Start method waitUntilEmailReceived");
         emailPage.waitUntilEmailReceived(subjectOfEmail);
+        logger.info("Start method clickSaveDocumentButton");
         emailPage.clickSaveDocumentButton();
         emailPage.getSaveDocumentPopup().clickMyDocuments();
         emailPage.getSaveDocumentPopup().clickSaveButton();
         DocumentsPage documentsPage = new DocumentsPage(driver);
+        logger.info("Start method clickDocumentsButton");
         documentsPage.clickDocumentsButton();
+        logger.info("Start method sleepForTwoSeconds");
         documentsPage.sleepForTwoSeconds();
+        logger.info("Start method deleteEmailFromDocumentsWithRightClick");
         documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
+        logger.info("Start method openTrash");
         documentsPage.openTrash();
+        logger.info("Start method assertElementIsPresentInTrash");
         documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
+        logger.info("End test method");
     }
 
     @AfterMethod
