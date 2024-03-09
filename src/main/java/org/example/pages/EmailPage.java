@@ -1,5 +1,7 @@
 package org.example.pages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.pages.pagecomponents.SaveDocumentPopup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
@@ -13,6 +15,7 @@ public class EmailPage {
 
     private final WebDriver driver;
     private final WebDriverWait wait;
+    private static final Logger logger = LogManager.getLogger(EmailPage.class);
     private static final By refreshIncomingLettersLocator = By.xpath("//div[text()='Обновить']");
     private static final By newLetterButtonLocator = By.xpath("//div[text()='Создать']");
     private static final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
@@ -90,14 +93,17 @@ public class EmailPage {
     }
 
     public void clickNewLetterButton() {
+        logger.info("Start method clickNewLetterButton");
         getNewLetterButton().click();
     }
 
     public void enterRecipientEmail(String recipient) {
+        logger.info("Start method enterRecipientEmail");
         getRecipientTextBox().sendKeys(recipient, Keys.ENTER);
     }
 
     public void attachFileToEmail(Path filePath) {
+        logger.info("Start method attachFileToEmail");
         getInputButton().click();
         String string = filePath.toAbsolutePath().toString();
         WebElement attachmentInput = getAttachmentInputButton();
@@ -106,6 +112,7 @@ public class EmailPage {
     }
 
     public void verifyThatFileIsLoaded() {
+        logger.info("Start method verifyThatFileIsLoaded");
         try {
             wait.until(ExpectedConditions.visibilityOfElementLocated(fileUploadCheckboxLocator));
         } catch (TimeoutException e) {
@@ -119,14 +126,17 @@ public class EmailPage {
     }
 
     public void setEmailSubject(String emailSubject) {
+        logger.info("Start method setEmailSubject");
         getMailSubjectTextInput().sendKeys(emailSubject);
     }
 
     public void clickSendLetterButton() {
+        logger.info("Start method clickSendLetterButton");
         getSendLetterButton().click();
     }
 
     public void waitUntilEmailReceived(String uniqueName) {
+        logger.info("Start method waitUntilEmailReceived");
         boolean elementFound = false;
         while (!elementFound) {
             try {
@@ -144,6 +154,7 @@ public class EmailPage {
     }
 
     public void clickSaveDocumentButton() {
+        logger.info("Start method clickSaveDocumentButton");
         WebElement toggleButton = getToggleButton();
         JavascriptExecutor js = (JavascriptExecutor) driver;
         js.executeScript("arguments[0].click();", toggleButton);

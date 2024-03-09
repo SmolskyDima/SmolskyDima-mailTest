@@ -1,5 +1,7 @@
 package org.example.pages;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 import org.example.pages.pagecomponents.ContextMenu;
 import org.example.pages.pagecomponents.LeftPanel;
 import org.example.pages.pagecomponents.NavigationBar;
@@ -16,6 +18,7 @@ public class DocumentsPage {
     private final WebDriver driver;
     private final WebDriverWait wait;
     private final NavigationBar navigationBar;
+    private static final Logger logger = LogManager.getLogger(DocumentsPage.class);
     private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
     private final String receivedElementLocator = "//div[contains(@title, '%s')]";
     private final String trashElementLocator = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
@@ -33,6 +36,7 @@ public class DocumentsPage {
     }
 
     public void clickDocumentsButton() {
+        logger.info("Start method clickDocumentsButton");
         WebElement docsButton = navigationBar.getDocumentsButton();
         ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
         Boolean until = wait.until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear));
@@ -49,6 +53,7 @@ public class DocumentsPage {
     }
 
     public void sleepForTwoSeconds() {
+        logger.info("Start method sleepForTwoSeconds");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -57,6 +62,7 @@ public class DocumentsPage {
     }
 
     public void deleteEmailFromDocumentsWithRightClick(String uniqueName) {
+        logger.info("Start method deleteEmailFromDocumentsWithRightClick");
         Actions actions = new Actions(driver);
         actions.contextClick(getReceivedElement(uniqueName)).perform();
 
@@ -65,6 +71,7 @@ public class DocumentsPage {
     }
 
     public void openTrash() {
+        logger.info("Start method openTrash");
         LeftPanel leftPanel = new LeftPanel(driver);
         leftPanel.getTrashButton().click();
     }
@@ -80,6 +87,7 @@ public class DocumentsPage {
     }
 
     public void assertElementIsPresentInTrash(String uniqueName) {
+        logger.info("Start method assertElementIsPresentInTrash");
         boolean isElementPresent = isElementPresentInTrash(uniqueName);
         Assert.assertTrue(isElementPresent, "The element is not present in the Trash");
     }
