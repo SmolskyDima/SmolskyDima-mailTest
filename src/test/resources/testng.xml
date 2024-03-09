@@ -1,0 +1,21 @@
+<suite name="Test parallel" parallel="tests" thread-count="2">
+    <test name="mailFenceAutomationTest">
+        <classes>
+            <class name="MailFenceAutomationTest">
+                <methods>
+                    <include name="mailFenceAutomationTest"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+    <test name="mailFenceAutomationTest2">
+        <classes>
+            <class name="MailFenceAutomationTest">
+                <methods>
+                    <include name="mailFenceAutomationTest2"/>
+                </methods>
+            </class>
+        </classes>
+    </test>
+</suite>
+

@@ -9,10 +9,7 @@ import org.openqa.selenium.*;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestResult;
-import org.testng.annotations.AfterClass;
-import org.testng.annotations.AfterMethod;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.testng.annotations.*;
 
 import java.nio.file.Path;
 import java.time.Duration;
@@ -24,74 +21,88 @@ import static org.example.utils.UserManager.getUserById;
 
 public class MailFenceAutomationTest {
 
-    private WebDriver driver;
-    Path filePath = TemporaryFileCreator.createTempFile();
-    String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
+    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
-    User user = getUserById("testUser");
     private static final Logger logger = LogManager.getLogger(MailFenceAutomationTest.class);
 
-    @BeforeClass
+    @BeforeMethod
     public void setUp() {
 
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
-        driver = new ChromeDriver(options);
+        WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get(MAIL_URL);
-
+        driverThreadLocal.set(driver);
     }
 
     @Test
     public void mailFenceAutomationTest() {
         logger.info("Start test method");
+        WebDriver driver = driverThreadLocal.get();
+        User user = getUserById("testUser");
+        Path filePath = TemporaryFileCreator.createTempFile();
+        String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
         LoginPage loginPage = new LoginPage(driver);
-        logger.info("Start method loginAsUser");
         loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
-        logger.info("Start method clickNewLetterButton");
         emailPage.clickNewLetterButton();
-        logger.info("Start method enterRecipientEmail");
         emailPage.enterRecipientEmail(user.getEmail());
-        logger.info("Start method attachFileToEmail");
         emailPage.attachFileToEmail(filePath);
-        logger.info("Start method verifyThatFileIsLoaded");
         emailPage.verifyThatFileIsLoaded();
-        logger.info("Start method setEmailSubject");
         emailPage.setEmailSubject(subjectOfEmail);
-        logger.info("Start method clickSendLetterButton");
         emailPage.clickSendLetterButton();
-        logger.info("Start method waitUntilEmailReceived");
         emailPage.waitUntilEmailReceived(subjectOfEmail);
-        logger.info("Start method clickSaveDocumentButton");
         emailPage.clickSaveDocumentButton();
         emailPage.getSaveDocumentPopup().clickMyDocuments();
         emailPage.getSaveDocumentPopup().clickSaveButton();
         DocumentsPage documentsPage = new DocumentsPage(driver);
-        logger.info("Start method clickDocumentsButton");
         documentsPage.clickDocumentsButton();
-        logger.info("Start method sleepForTwoSeconds");
         documentsPage.sleepForTwoSeconds();
-        logger.info("Start method deleteEmailFromDocumentsWithRightClick");
         documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
-        logger.info("Start method openTrash");
         documentsPage.openTrash();
-        logger.info("Start method assertElementIsPresentInTrash");
         documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
         logger.info("End test method");
     }
 
+    @Test
+    public void mailFenceAutomationTest2() {
+        logger.info("Start test method2");
+        WebDriver driver = driverThreadLocal.get();
+        User user = getUserById("testUser");
+        Path filePath = TemporaryFileCreator.createTempFile();
+        String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
+        LoginPage loginPage = new LoginPage(driver);
+        loginPage.loginAsUser(user.getName(), user.getPassword());
+        EmailPage emailPage = new EmailPage(driver);
+        emailPage.clickNewLetterButton();
+        emailPage.enterRecipientEmail(user.getEmail());
+        emailPage.attachFileToEmail(filePath);
+        emailPage.verifyThatFileIsLoaded();
+        emailPage.setEmailSubject(subjectOfEmail);
+        emailPage.clickSendLetterButton();
+        emailPage.waitUntilEmailReceived(subjectOfEmail);
+        emailPage.clickSaveDocumentButton();
+        emailPage.getSaveDocumentPopup().clickMyDocuments();
+        emailPage.getSaveDocumentPopup().clickSaveButton();
+        DocumentsPage documentsPage = new DocumentsPage(driver);
+        documentsPage.clickDocumentsButton();
+        documentsPage.sleepForTwoSeconds();
+        documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
+        documentsPage.openTrash();
+        documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
+        logger.info("End test method2");
+    }
     @AfterMethod
     public void takeScreenshotOnFailure(ITestResult result) {
-        if (!result.isSuccess()) {
-            takeScreenshot(driver);
-            takeSource(driver);
+        WebDriver driver = driverThreadLocal.get();
+        if (driver != null) {
+            if (!result.isSuccess()) {
+                takeScreenshot(driver);
+                takeSource(driver);
+            }
+            driver.quit();
         }
-    }
-
-    @AfterClass
-    public void tearDown() {
-        driver.quit();
     }
 }
