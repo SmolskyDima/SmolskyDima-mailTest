@@ -74,6 +74,11 @@ public class MailFenceAutomationTest {
         Path filePath = TemporaryFileCreator.createTempFile();
         String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
         LoginPage loginPage = new LoginPage(driver);
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
         loginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage emailPage = new EmailPage(driver);
         emailPage.clickNewLetterButton();

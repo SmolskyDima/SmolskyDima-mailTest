@@ -6,6 +6,7 @@ import org.example.pages.pagecomponents.SaveDocumentPopup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
 import java.nio.file.Path;
 import java.time.Duration;
@@ -31,7 +32,7 @@ public class EmailPage {
 
     public EmailPage(WebDriver driver) {
         this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
+        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
     }
 
     public WebElement getRefreshIncomingLettersButton() {
@@ -39,7 +40,7 @@ public class EmailPage {
     }
 
     public WebElement getNewLetterButton() {
-        return driver.findElement(newLetterButtonLocator);
+        return wait.until(ExpectedConditions.visibilityOfElementLocated(newLetterButtonLocator));
     }
 
     public WebElement getRecipientTextBox() {
@@ -81,15 +82,6 @@ public class EmailPage {
     public WebElement getReceivedElement(String uniqueName) {
         return wait.until(ExpectedConditions.visibilityOfElementLocated(By
                 .xpath(String.format(receivedElementLocator, uniqueName))));
-    }
-
-    public boolean isPageOpened() {
-        try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(refreshIncomingLettersLocator));
-            return true;
-        } catch (TimeoutException e) {
-            return false;
-        }
     }
 
     public void clickNewLetterButton() {
