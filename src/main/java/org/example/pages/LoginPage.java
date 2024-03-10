@@ -3,9 +3,14 @@ package org.example.pages;
 import org.apache.logging.log4j.LogManager;
 import org.apache.logging.log4j.Logger;
 import org.openqa.selenium.By;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
+import org.openqa.selenium.support.ui.ExpectedConditions;
+import org.openqa.selenium.support.ui.WebDriverWait;
+import org.testng.Assert;
 
+import java.time.Duration;
 import java.util.NoSuchElementException;
 
 public class LoginPage {
@@ -37,11 +42,22 @@ public class LoginPage {
             getUserNameInputField().sendKeys(username);
             getUserPasswordInputField().sendKeys(password);
             getEnterButton().click();
-//            EmailPage emailPage = new EmailPage(driver);
-//            Assert.assertTrue(emailPage.isPageOpened(), "Page is not loaded after login");
+
+            Assert.assertTrue(waitForSpinnerToDisappear(driver), "Page is not loaded after login");
 
         } catch (NoSuchElementException e) {
             e.printStackTrace();
+        }
+    }
+
+    public boolean waitForSpinnerToDisappear(WebDriver driver) {
+        WebDriverWait wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+        WebElement spinner = driver.findElement(By.cssSelector(".progress"));
+        try {
+            wait.until(ExpectedConditions.invisibilityOf(spinner));
+            return true;
+        } catch (TimeoutException e) {
+            return false;
         }
     }
 }
