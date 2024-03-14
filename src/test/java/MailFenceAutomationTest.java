@@ -1,29 +1,29 @@
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
 import org.example.entity.User;
-import org.example.utils.TemporaryFileCreator;
+import org.example.listener.TestListener;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
 import org.example.pages.LoginPage;
-import org.openqa.selenium.*;
+import org.example.utils.TemporaryFileCreator;
+import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
 import org.testng.ITestResult;
-import org.testng.annotations.*;
+import org.testng.annotations.AfterMethod;
+import org.testng.annotations.BeforeMethod;
+import org.testng.annotations.Listeners;
+import org.testng.annotations.Test;
 
 import java.nio.file.Path;
 import java.time.Duration;
 
-import static org.example.utils.ScreenshotsManager.takeScreenshot;
-import static org.example.utils.ScreenshotsManager.takeSource;
 import static org.example.utils.UserManager.getUserById;
 
 
+@Listeners(TestListener.class)
 public class MailFenceAutomationTest {
 
     private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
-    private static final Logger logger = LogManager.getLogger(MailFenceAutomationTest.class);
 
     @BeforeMethod
     public void setUp() {
@@ -39,7 +39,6 @@ public class MailFenceAutomationTest {
 
     @Test
     public void mailFenceAutomationTest() {
-        logger.info("Start test method");
         WebDriver driver = driverThreadLocal.get();
         User user = getUserById("testUser");
         Path filePath = TemporaryFileCreator.createTempFile();
@@ -63,12 +62,10 @@ public class MailFenceAutomationTest {
         documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
         documentsPage.openTrash();
         documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
-        logger.info("End test method");
     }
 
     @Test
     public void mailFenceAutomationTest2() {
-        logger.info("Start test method2");
         WebDriver driver = driverThreadLocal.get();
         User user = getUserById("testUser");
         Path filePath = TemporaryFileCreator.createTempFile();
@@ -97,16 +94,11 @@ public class MailFenceAutomationTest {
         documentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
         documentsPage.openTrash();
         documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
-        logger.info("End test method2");
     }
     @AfterMethod
     public void takeScreenshotOnFailure(ITestResult result) {
         WebDriver driver = driverThreadLocal.get();
         if (driver != null) {
-            if (!result.isSuccess()) {
-                takeScreenshot(driver);
-                takeSource(driver);
-            }
             driver.quit();
         }
     }
