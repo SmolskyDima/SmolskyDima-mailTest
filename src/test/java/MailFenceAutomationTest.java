@@ -7,7 +7,7 @@ import org.example.utils.TemporaryFileCreator;
 import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.chrome.ChromeDriver;
 import org.openqa.selenium.chrome.ChromeOptions;
-import org.testng.ITestResult;
+import org.testng.ITestContext;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Listeners;
@@ -22,24 +22,22 @@ import static org.example.utils.UserManager.getUserById;
 @Listeners(TestListener.class)
 public class MailFenceAutomationTest {
 
-    private static final ThreadLocal<WebDriver> driverThreadLocal = new ThreadLocal<>();
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
 
     @BeforeMethod
-    public void setUp() {
-
+    public void setUp(ITestContext context) {
         ChromeOptions options = new ChromeOptions();
         options.addArguments("--disable-blink-features=AutomationControlled");
         WebDriver driver = new ChromeDriver(options);
         driver.manage().window().maximize();
         driver.manage().timeouts().implicitlyWait(Duration.ofSeconds(3));
         driver.get(MAIL_URL);
-        driverThreadLocal.set(driver);
+        context.setAttribute("WebDriver", driver);
     }
 
     @Test
-    public void mailFenceAutomationTest() {
-        WebDriver driver = driverThreadLocal.get();
+    public void mailFenceAutomationTest(ITestContext context) {
+        WebDriver driver = (WebDriver) context.getAttribute("WebDriver");
         User user = getUserById("testUser");
         Path filePath = TemporaryFileCreator.createTempFile();
         String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
@@ -65,8 +63,8 @@ public class MailFenceAutomationTest {
     }
 
     @Test
-    public void mailFenceAutomationTest2() {
-        WebDriver driver = driverThreadLocal.get();
+    public void mailFenceAutomationTest2(ITestContext context) {
+        WebDriver driver = (WebDriver) context.getAttribute("WebDriver");
         User user = getUserById("testUser");
         Path filePath = TemporaryFileCreator.createTempFile();
         String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
@@ -95,9 +93,10 @@ public class MailFenceAutomationTest {
         documentsPage.openTrash();
         documentsPage.assertElementIsPresentInTrash(subjectOfEmail);
     }
+
     @AfterMethod
-    public void takeScreenshotOnFailure(ITestResult result) {
-        WebDriver driver = driverThreadLocal.get();
+    public void closeWebDriver(ITestContext context) {
+        WebDriver driver = (WebDriver) context.getAttribute("WebDriver");
         if (driver != null) {
             driver.quit();
         }
