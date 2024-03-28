@@ -28,7 +28,7 @@ public class TestListener extends TestListenerAdapter {
             try {
                 saveScreenshot(screenshot, result.getName());
             } catch (IOException e) {
-                e.printStackTrace();
+                getLogger().error(" ", e);
             }
         }
     }
