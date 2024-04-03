@@ -2,7 +2,6 @@ package org.example.listener;
 
 import org.openqa.selenium.OutputType;
 import org.openqa.selenium.TakesScreenshot;
-import org.openqa.selenium.WebDriver;
 import org.testng.ITestResult;
 import org.testng.TestListenerAdapter;
 
@@ -12,6 +11,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+import static org.example.driver.WebDriverWrapper.getDriver;
 import static org.example.utils.Logger.getLogger;
 
 public class TestListener extends TestListenerAdapter {
@@ -20,16 +20,12 @@ public class TestListener extends TestListenerAdapter {
 
     @Override
     public void onTestFailure(ITestResult result) {
-        WebDriver driver = (WebDriver) result.getTestContext().getAttribute("WebDriver");
         getLogger().info("Test failed: " + result.getName());
-
-        if (driver instanceof TakesScreenshot) {
-            File screenshot = ((TakesScreenshot) driver).getScreenshotAs(OutputType.FILE);
-            try {
-                saveScreenshot(screenshot, result.getName());
-            } catch (IOException e) {
-                getLogger().error(" ", e);
-            }
+        File screenshot = ((TakesScreenshot) getDriver()).getScreenshotAs(OutputType.FILE);
+        try {
+            saveScreenshot(screenshot, result.getName());
+        } catch (IOException e) {
+            getLogger().error(" ", e);
         }
     }
 
