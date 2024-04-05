@@ -4,7 +4,11 @@ import org.openqa.selenium.By;
 
 public class Button extends Element{
 
-    public Button(By locator) {
-        super(locator);
+    public Button(By locator, String elementName) {
+        super(locator, elementName);
+    }
+
+    public void click() {
+        getElement().click();
     }
 }
