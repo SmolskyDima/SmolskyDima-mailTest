@@ -1,26 +1,23 @@
 package org.example.pages.pagecomponents;
 
+import org.example.elements.Button;
 import org.openqa.selenium.By;
-import org.openqa.selenium.WebDriver;
 import org.openqa.selenium.WebElement;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
-import java.time.Duration;
+import static org.example.driver.Waiter.getWaiter;
 
 public class SaveDocumentPopup {
 
-    private final WebDriverWait wait;
-    private final By myDocumentLocator = By.xpath("//div[text()='Мои документы']");
-    private final By saveButtonLocator = By.xpath("//div[@id='dialBtn_OK']");
+    private final Button myDocumentButton = new Button(By.xpath("//div[text()='Мои документы']"), "My document");
+    private final Button saveButton = new Button(By.xpath("//div[@id='dialBtn_OK']"), "Save");
 
-    public SaveDocumentPopup(WebDriver driver) {
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-
+    public WebElement getMyDocumentButton() {
+        return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(myDocumentButton.getLocator()));
     }
 
-    public WebElement getMyDocumentButton(){
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(myDocumentLocator));
+    public WebElement getSaveButton() {
+        return getWaiter().until(ExpectedConditions.visibilityOfElementLocated(saveButton.getLocator()));
     }
 
     public void clickMyDocuments() {
@@ -28,9 +25,9 @@ public class SaveDocumentPopup {
     }
 
     public void clickSaveButton() {
-        wait.until(ExpectedConditions.not(ExpectedConditions
-                .attributeContains(saveButtonLocator, "class", "GCSDBRWBMB")));
-        wait.until(ExpectedConditions.visibilityOfElementLocated(saveButtonLocator)).click();
+        getWaiter().withMessage("Waiting for the save button to become active").until(ExpectedConditions.not(ExpectedConditions
+                .attributeContains(saveButton.getLocator(), "class", "GCSDBRWBMB")));
+        getSaveButton().click();
     }
 }
 
