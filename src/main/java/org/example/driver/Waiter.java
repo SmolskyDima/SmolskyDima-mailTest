@@ -1,5 +1,7 @@
 package org.example.driver;
 
+import org.example.elements.Element;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.time.Duration;
@@ -12,5 +14,8 @@ public class Waiter {
         return new WebDriverWait(getDriver(), Duration.ofSeconds(30));
     }
 
+    public static void waitForVisibility(Element element) {
+         getWaiter().until(ExpectedConditions.visibilityOfElementLocated(element.getLocator()));
+    }
 }
 
