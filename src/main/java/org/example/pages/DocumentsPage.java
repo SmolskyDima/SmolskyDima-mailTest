@@ -1,59 +1,47 @@
 package org.example.pages;
 
-import org.apache.logging.log4j.LogManager;
-import org.apache.logging.log4j.Logger;
-import org.example.pages.pagecomponents.ContextMenu;
-import org.example.pages.pagecomponents.LeftPanel;
-import org.example.pages.pagecomponents.NavigationBar;
-import org.openqa.selenium.*;
+import org.example.elements.Element;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.NoSuchElementException;
 import org.openqa.selenium.interactions.Actions;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 import org.testng.Assert;
 
-import java.time.Duration;
+import static org.example.driver.Waiter.getWaiter;
+import static org.example.driver.Waiter.waitForVisibility;
+import static org.example.driver.WebDriverWrapper.getDriver;
+import static org.example.pages.pagecomponents.ContextMenu.deleteElementButton;
+import static org.example.pages.pagecomponents.LeftPanel.trashButton;
+import static org.example.pages.pagecomponents.NavigationBar.documentsButton;
+import static org.example.utils.Logger.getLogger;
 
 public class DocumentsPage {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private final NavigationBar navigationBar;
-    private static final Logger logger = LogManager.getLogger(DocumentsPage.class);
-    private final By elementThatShouldDisappear = By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY");
-    private final String receivedElementLocator = "//div[contains(@title, '%s')]";
-    private final String trashElementLocator = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
+    private static final Element elementThatShouldDisappear = new Element(By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY"),"unknownElement");
+    private static final String receivedEmailLocatorTemplate = "//div[contains(@title, '%s')]";
+    private static final String trashLocatorTemplate = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
 
 
-    public DocumentsPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(10));
-        this.navigationBar = new NavigationBar(driver);
-    }
-
-    public WebElement getDeleteButton() {
-        ContextMenu contextMenu = new ContextMenu(driver);
-        return contextMenu.getDeleteElementButton();
-    }
-
-    public void clickDocumentsButton() {
-        logger.info("Start method clickDocumentsButton");
-        WebElement docsButton = navigationBar.getDocumentsButton();
-        ((JavascriptExecutor) driver).executeScript("arguments[0].scrollIntoView(true);", docsButton);
-        Boolean until = wait.until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear));
+    public static void clickDocumentsButton() {
+        getLogger().info("Start method clickDocumentsButton");
+        ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", documentsButton.getElement());
+        Boolean until =
+                getWaiter().withMessage("Waiting until element disappears").
+                until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear.getLocator()));
         if (!until) {
-            System.out.println("Element is not clickable");
+            getLogger().info("Element is not clickable");
             return;
         }
-        docsButton.click();
+        documentsButton.click();
     }
 
-    public WebElement getReceivedElement(String uniqueName) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath(String.format(receivedElementLocator, uniqueName))));
+    public static Element getReceivedEmail(String uniqueName) {
+        return new Element(By.xpath(String.format(receivedEmailLocatorTemplate, uniqueName)));
     }
 
-    public void sleepForTwoSeconds() {
-        logger.info("Start method sleepForTwoSeconds");
+    public static void sleepForTwoSeconds() {
+        getLogger().info("Start method sleepForTwoSeconds");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {
@@ -61,33 +49,31 @@ public class DocumentsPage {
         }
     }
 
-    public void deleteEmailFromDocumentsWithRightClick(String uniqueName) {
-        logger.info("Start method deleteEmailFromDocumentsWithRightClick");
-        Actions actions = new Actions(driver);
-        actions.contextClick(getReceivedElement(uniqueName)).perform();
-
-        WebElement deleteFromDocumentElement = getDeleteButton();
-        deleteFromDocumentElement.click();
+    public static void deleteEmailFromDocumentsWithRightClick(String uniqueName) {
+        getLogger().info("Start method deleteEmailFromDocumentsWithRightClick");
+        Actions actions = new Actions(getDriver());
+        waitForVisibility(getReceivedEmail(uniqueName));
+        actions.contextClick(getReceivedEmail(uniqueName).getElement()).perform();
+        deleteElementButton.click();
     }
 
-    public void openTrash() {
-        logger.info("Start method openTrash");
-        LeftPanel leftPanel = new LeftPanel(driver);
-        leftPanel.getTrashButton().click();
+    public static void openTrash() {
+        getLogger().info("Start method openTrash");
+        trashButton.click();
     }
 
 
-    private boolean isElementPresentInTrash(String uniqueName) {
+    private static boolean isElementPresentInTrash(String uniqueName) {
         try {
-            driver.findElement(By.xpath(String.format(trashElementLocator, uniqueName)));
+            getDriver().findElement(By.xpath(String.format(trashLocatorTemplate, uniqueName)));
             return true;
         } catch (NoSuchElementException e) {
             return false;
         }
     }
 
-    public void assertElementIsPresentInTrash(String uniqueName) {
-        logger.info("Start method assertElementIsPresentInTrash");
+    public static void assertElementIsPresentInTrash(String uniqueName) {
+        getLogger().info("Start method assertElementIsPresentInTrash");
         boolean isElementPresent = isElementPresentInTrash(uniqueName);
         Assert.assertTrue(isElementPresent, "The element is not present in the Trash");
     }
