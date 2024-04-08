@@ -1,130 +1,83 @@
 package org.example.pages;
 
+import org.example.elements.Button;
+import org.example.elements.Element;
+import org.example.elements.Input;
 import org.example.pages.pagecomponents.SaveDocumentPopup;
 import org.openqa.selenium.*;
 import org.openqa.selenium.support.ui.ExpectedConditions;
-import org.openqa.selenium.support.ui.WebDriverWait;
 
 import java.nio.file.Path;
-import java.time.Duration;
 
+import static org.example.driver.Waiter.getWaiter;
+import static org.example.driver.Waiter.waitForVisibility;
+import static org.example.driver.WebDriverWrapper.getDriver;
 import static org.example.utils.Logger.getLogger;
 
 public class EmailPage {
 
-    private final WebDriver driver;
-    private final WebDriverWait wait;
-    private static final By refreshIncomingLettersLocator = By.xpath("//div[@class = 'icon icon16-Refresh']");
-    private static final By newLetterButtonLocator = By.xpath("//div[@id='mailNewBtn']");
-    private static final By recipientTextBoxLocator = By.className("GCSDBRWBPL");
-    private static final By inputLocator = By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB");
-    private static final By attachmentInputLocator = By.cssSelector("input[type='file'][name^='docgwt-uid-']");
-    private static final By fileUploadCheckboxLocator = By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']");
-    private static final By fileUploadProgressBarLocator = By.xpath("//div[@class='GCSDBRWBCS']");
-    private static final By mailSubjectTextLocator = By.id("mailSubject");
-    private static final By sendLetterLocator = By.xpath("//div[text()='Отправить']");
-    private static final By toggleButtonLocator = By.xpath("//b[@class='icon-Arrow-down']");
-    private static final By saveInDocumentLocator = By.xpath("//span[@class and text()='Сохранить в документах']");
-    private final String receivedElementLocator = "//div[@class='listSubject' and contains(text(), '%s')]";
 
-    public EmailPage(WebDriver driver) {
-        this.driver = driver;
-        this.wait = new WebDriverWait(driver, Duration.ofSeconds(15));
+    private static final Button refreshIncomingLettersButton = new Button(By.xpath("//div[@class = 'icon icon16-Refresh']"), "Incoming Letters");
+    private static final Button newLetterButton = new Button(By.xpath("//div[@id='mailNewBtn']"), "New letter");
+    private static final Input recipientTextBox = new Input(By.className("GCSDBRWBPL"), "Recipient textBox");
+    private static final Button attachmentDropDownButton = new Button(By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB"), "Drop down");
+    private static final Input attachmentInput = new Input(By.cssSelector("input[type='file'][name^='docgwt-uid-']"), "Attachment input");
+    private static final Element fileUploadCheckbox = new Element(By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']"), "uploadCheckbox");
+    private static final Element fileUploadProgressBar = new Element(By.xpath("//div[@class='GCSDBRWBCS']"), "uploadProgressBar");
+    private static final Input mailSubjectTextBox = new Input(By.id("mailSubject"), "Mail subject");
+    private static final Button sendLetterButton = new Button(By.xpath("//div[@id = 'mailSend']"), "Send letter");
+    private static final Element toggleButton = new Element(By.xpath("//b[@class='icon-Arrow-down']"), "toggleButton");
+    private static final Button saveInDocumentButton = new Button(By.xpath("(//span[@class = 'GCSDBRWBGR'])[2]"), "Save in document");
+    private static final String receivedElementLocator = "//div[@class='listSubject' and contains(text(), '%s')]";
+
+
+    public static Element getReceivedElement(String uniqueName) {
+        return new Element(By.xpath(String.format(receivedElementLocator, uniqueName)));
     }
 
-    public WebElement getRefreshIncomingLettersButton() {
-        return driver.findElement(refreshIncomingLettersLocator);
-    }
 
-    public WebElement getNewLetterButton() {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(newLetterButtonLocator));
-    }
-
-    public WebElement getRecipientTextBox() {
-        return driver.findElement(recipientTextBoxLocator);
-    }
-
-    public WebElement getInputButton() {
-        return driver.findElement(inputLocator);
-    }
-
-    public WebElement getAttachmentInputButton() {
-        return driver.findElement(attachmentInputLocator);
-    }
-
-    public WebElement getFileUploadCheckbox() {
-        return driver.findElement(fileUploadCheckboxLocator);
-    }
-
-    public WebElement getFileUploadProgressBar() {
-        return driver.findElement(fileUploadProgressBarLocator);
-    }
-
-    public WebElement getMailSubjectTextInput() {
-        return driver.findElement(mailSubjectTextLocator);
-    }
-
-    public WebElement getSendLetterButton() {
-        return driver.findElement(sendLetterLocator);
-    }
-
-    public WebElement getToggleButton() {
-        return driver.findElement(toggleButtonLocator);
-    }
-
-    public WebElement getSaveInDocumentButton() {
-        return driver.findElement(saveInDocumentLocator);
-    }
-
-    public WebElement getReceivedElement(String uniqueName) {
-        return wait.until(ExpectedConditions.visibilityOfElementLocated(By
-                .xpath(String.format(receivedElementLocator, uniqueName))));
-    }
-
-    public void clickNewLetterButton() {
+    public static void clickNewLetterButton() {
         getLogger().info("Start method clickNewLetterButton");
-        getNewLetterButton().click();
+        newLetterButton.click();
     }
 
-    public void enterRecipientEmail(String recipient) {
+    public static void enterRecipientEmail(String recipient) {
         getLogger().info("Start method enterRecipientEmail");
-        getRecipientTextBox().sendKeys(recipient, Keys.ENTER);
+        recipientTextBox.sendKeys(recipient, Keys.ENTER);
     }
 
-    public void attachFileToEmail(Path filePath) {
+    public static void attachFileToEmail(Path filePath) {
         getLogger().info("Start method attachFileToEmail");
-        getInputButton().click();
+        attachmentDropDownButton.click();
         String string = filePath.toAbsolutePath().toString();
-        WebElement attachmentInput = getAttachmentInputButton();
         attachmentInput.sendKeys(string);
-
     }
 
-    public void verifyThatFileIsLoaded() {
+    public static void verifyThatFileIsLoaded() {
         getLogger().info("Start method verifyThatFileIsLoaded");
         try {
-            wait.until(ExpectedConditions.visibilityOfElementLocated(fileUploadCheckboxLocator));
+            waitForVisibility(fileUploadCheckbox);
         } catch (TimeoutException e) {
             try {
-                wait.until(ExpectedConditions
-                        .attributeToBe(fileUploadProgressBarLocator, "style", "width: 100%; visibility: visible;"));
+                getWaiter().withMessage("Waiting for file upload completion").until(ExpectedConditions
+                        .attributeToBe(fileUploadProgressBar.getLocator(), "style", "width: 100%; visibility: visible;"));
             } catch (TimeoutException second) {
-                System.out.println("Failed to confirm successful file download");
+                getLogger().info("Failed to confirm successful file download");
             }
         }
     }
 
-    public void setEmailSubject(String emailSubject) {
+    public static void setEmailSubject(String emailSubject) {
         getLogger().info("Start method setEmailSubject");
-        getMailSubjectTextInput().sendKeys(emailSubject);
+        mailSubjectTextBox.sendKeys(emailSubject);
     }
 
-    public void clickSendLetterButton() {
+    public static void clickSendLetterButton() {
         getLogger().info("Start method clickSendLetterButton");
-        getSendLetterButton().click();
+        sendLetterButton.click();
     }
 
-    public void waitUntilEmailReceived(String uniqueName) {
+    public static void waitUntilEmailReceived(String uniqueName) {
         getLogger().info("Start method waitUntilEmailReceived");
         boolean elementFound = false;
         while (!elementFound) {
@@ -133,7 +86,7 @@ public class EmailPage {
                 elementFound = true;
             } catch (TimeoutException e) {
                 try {
-                    driver.findElement(refreshIncomingLettersLocator).click();
+                    getDriver().findElement(refreshIncomingLettersButton.getLocator()).click();
                     Thread.sleep(1000);
                 } catch (InterruptedException ex) {
                     Thread.currentThread().interrupt();
@@ -142,15 +95,14 @@ public class EmailPage {
         }
     }
 
-    public void clickSaveDocumentButton() {
+    public static void clickSaveDocumentButton() {
         getLogger().info("Start method clickSaveDocumentButton");
-        WebElement toggleButton = getToggleButton();
-        JavascriptExecutor js = (JavascriptExecutor) driver;
-        js.executeScript("arguments[0].click();", toggleButton);
-        getSaveInDocumentButton().click();
+        JavascriptExecutor js = (JavascriptExecutor) getDriver();
+        js.executeScript("arguments[0].click();", toggleButton.getElement());
+        saveInDocumentButton.click();
     }
 
-    public SaveDocumentPopup getSaveDocumentPopup() {
-        return new SaveDocumentPopup(driver);
+    public static SaveDocumentPopup getSaveDocumentPopup() {
+        return new SaveDocumentPopup();
     }
 }
