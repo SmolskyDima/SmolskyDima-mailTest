@@ -17,8 +17,15 @@ public class Element {
         this.elementName = elementName;
     }
 
+    public Element(By xpath) {
+    }
+
     public WebElement getElement() {
         return getDriver().findElement(locator);
+    }
+
+    public void click() {
+        getElement().click();
     }
 
     @Override
