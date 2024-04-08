@@ -6,11 +6,12 @@ import org.example.elements.Element;
 import org.example.elements.Input;
 import org.openqa.selenium.By;
 import org.openqa.selenium.TimeoutException;
+import org.openqa.selenium.support.ui.ExpectedConditions;
 import org.testng.Assert;
 
 import java.util.NoSuchElementException;
 
-import static org.example.driver.Waiter.waitForVisibility;
+import static org.example.driver.Waiter.getWaiter;
 import static org.example.utils.Logger.getLogger;
 
 public class LoginPage {
@@ -20,7 +21,8 @@ public class LoginPage {
     private static final Input userPassword = new Input(By.name("Password"), "Password");
     @Getter
     private static final Button enterButton = new Button(By.xpath("//input[@value='Enter']"), "Enter");
-    private static final Element spinner = new Element(By.cssSelector(".progress"));
+    @Getter
+    private static final Element spinner = new Element(By.cssSelector(".progress"), "Spinner");
 
     public static void loginAsUser(String username, String password) {
         try {
@@ -37,7 +39,7 @@ public class LoginPage {
 
     public static boolean waitForSpinnerToDisappear() {
         try {
-            waitForVisibility(spinner);
+            getWaiter().until(ExpectedConditions.invisibilityOf(spinner.getElement()));
             return true;
         } catch (TimeoutException e) {
             return false;

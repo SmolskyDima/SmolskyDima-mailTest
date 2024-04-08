@@ -18,6 +18,7 @@ public class Element {
     }
 
     public Element(By xpath) {
+        this.locator = xpath;
     }
 
     public WebElement getElement() {

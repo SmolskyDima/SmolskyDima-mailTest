@@ -11,7 +11,7 @@ import static org.example.driver.WebDriverWrapper.getDriver;
 public class Waiter {
 
     public static WebDriverWait getWaiter() {
-        return new WebDriverWait(getDriver(), Duration.ofSeconds(30));
+        return new WebDriverWait(getDriver(), Duration.ofSeconds(10));
     }
 
     public static void waitForVisibility(Element element) {

@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import lombok.Getter;
 import org.example.elements.Element;
 import org.openqa.selenium.By;
 import org.openqa.selenium.JavascriptExecutor;
@@ -18,8 +19,11 @@ import static org.example.utils.Logger.getLogger;
 
 public class DocumentsPage {
 
-    private static final Element elementThatShouldDisappear = new Element(By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY"),"unknownElement");
+    @Getter
+    private static final Element elementThatShouldDisappear = new Element(By.cssSelector("div.GCSDBRWBFY.GCSDBRWBGY"), "unknownElement");
+    @Getter
     private static final String receivedEmailLocatorTemplate = "//div[contains(@title, '%s')]";
+    @Getter
     private static final String trashLocatorTemplate = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
 
 
@@ -28,7 +32,7 @@ public class DocumentsPage {
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", documentsButton.getElement());
         Boolean until =
                 getWaiter().withMessage("Waiting until element disappears").
-                until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear.getLocator()));
+                        until(ExpectedConditions.invisibilityOfElementLocated(elementThatShouldDisappear.getLocator()));
         if (!until) {
             getLogger().info("Element is not clickable");
             return;

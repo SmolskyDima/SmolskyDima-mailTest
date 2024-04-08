@@ -1,10 +1,14 @@
 package org.example.pages;
 
+import lombok.Getter;
 import org.example.elements.Button;
 import org.example.elements.Element;
 import org.example.elements.Input;
 import org.example.pages.pagecomponents.SaveDocumentPopup;
-import org.openqa.selenium.*;
+import org.openqa.selenium.By;
+import org.openqa.selenium.JavascriptExecutor;
+import org.openqa.selenium.Keys;
+import org.openqa.selenium.TimeoutException;
 import org.openqa.selenium.support.ui.ExpectedConditions;
 
 import java.nio.file.Path;
@@ -16,20 +20,30 @@ import static org.example.utils.Logger.getLogger;
 
 public class EmailPage {
 
-
+    @Getter
     private static final Button refreshIncomingLettersButton = new Button(By.xpath("//div[@class = 'icon icon16-Refresh']"), "Incoming Letters");
+    @Getter
     private static final Button newLetterButton = new Button(By.xpath("//div[@id='mailNewBtn']"), "New letter");
+    @Getter
     private static final Input recipientTextBox = new Input(By.className("GCSDBRWBPL"), "Recipient textBox");
+    @Getter
     private static final Button attachmentDropDownButton = new Button(By.cssSelector(".GCSDBRWBJSB.GCSDBRWBKSB"), "Drop down");
+    @Getter
     private static final Input attachmentInput = new Input(By.cssSelector("input[type='file'][name^='docgwt-uid-']"), "Attachment input");
+    @Getter
     private static final Element fileUploadCheckbox = new Element(By.xpath("//div[@class='GCSDBRWBCSB GCSDBRWBN widgetActive']"), "uploadCheckbox");
+    @Getter
     private static final Element fileUploadProgressBar = new Element(By.xpath("//div[@class='GCSDBRWBCS']"), "uploadProgressBar");
+    @Getter
     private static final Input mailSubjectTextBox = new Input(By.id("mailSubject"), "Mail subject");
+    @Getter
     private static final Button sendLetterButton = new Button(By.xpath("//div[@id = 'mailSend']"), "Send letter");
+    @Getter
     private static final Element toggleButton = new Element(By.xpath("//b[@class='icon-Arrow-down']"), "toggleButton");
+    @Getter
     private static final Button saveInDocumentButton = new Button(By.xpath("(//span[@class = 'GCSDBRWBGR'])[2]"), "Save in document");
+    @Getter
     private static final String receivedElementLocator = "//div[@class='listSubject' and contains(text(), '%s')]";
-
 
     public static Element getReceivedElement(String uniqueName) {
         return new Element(By.xpath(String.format(receivedElementLocator, uniqueName)));
@@ -82,7 +96,9 @@ public class EmailPage {
         boolean elementFound = false;
         while (!elementFound) {
             try {
-                getReceivedElement(uniqueName).click();
+                Element receivedElement = getReceivedElement(uniqueName);
+                waitForVisibility(receivedElement);
+                receivedElement.click();
                 elementFound = true;
             } catch (TimeoutException e) {
                 try {
