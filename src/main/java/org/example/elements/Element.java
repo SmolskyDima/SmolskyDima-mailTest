@@ -23,7 +23,7 @@ public class Element {
 
     @Override
     public String toString() {
-        return "Element{" +
+        return this.getClass().getSimpleName() + "{" +
                 "locator=" + locator +
                 ", elementName='" + elementName + '\'' +
                 '}';
