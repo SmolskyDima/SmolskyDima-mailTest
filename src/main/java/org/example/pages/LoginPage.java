@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.example.elements.Button;
 import org.example.elements.Element;
@@ -24,9 +25,9 @@ public class LoginPage {
     @Getter
     private static final Element spinner = new Element(By.cssSelector(".progress"), "Spinner");
 
+    @Step("Start method loginAsUser")
     public static void loginAsUser(String username, String password) {
         try {
-            getLogger().info("Start method loginAsUser");
             userName.sendKeys(username);
             userPassword.sendKeys(password);
             enterButton.click();
@@ -36,7 +37,7 @@ public class LoginPage {
             getLogger().error(" ", e);
         }
     }
-
+    @Step("Waiting for the start page to load - spinner has to disappear")
     public static boolean waitForSpinnerToDisappear() {
         try {
             getWaiter().until(ExpectedConditions.invisibilityOf(spinner.getElement()));

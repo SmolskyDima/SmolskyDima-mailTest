@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.example.elements.Button;
 import org.example.elements.Element;
@@ -46,29 +47,25 @@ public class EmailPage {
     private static final String receivedElementLocator = "//div[@class='listSubject' and contains(text(), '%s')]";
 
     public static Element getReceivedElement(String uniqueName) {
-        return new Element(By.xpath(String.format(receivedElementLocator, uniqueName)));
+        return new Element(By.xpath(String.format(receivedElementLocator, uniqueName)),"Received element");
     }
 
-
+    @Step("Start method clickNewLetterButton")
     public static void clickNewLetterButton() {
-        getLogger().info("Start method clickNewLetterButton");
         newLetterButton.click();
     }
-
+    @Step("Start method enterRecipientEmail")
     public static void enterRecipientEmail(String recipient) {
-        getLogger().info("Start method enterRecipientEmail");
         recipientTextBox.sendKeys(recipient, Keys.ENTER);
     }
-
+    @Step("Start method attachFileToEmail")
     public static void attachFileToEmail(Path filePath) {
-        getLogger().info("Start method attachFileToEmail");
         attachmentDropDownButton.click();
         String string = filePath.toAbsolutePath().toString();
         attachmentInput.sendKeys(string);
     }
-
+    @Step("Start method verifyThatFileIsLoaded")
     public static void verifyThatFileIsLoaded() {
-        getLogger().info("Start method verifyThatFileIsLoaded");
         try {
             waitForVisibility(fileUploadCheckbox);
         } catch (TimeoutException e) {
@@ -80,19 +77,16 @@ public class EmailPage {
             }
         }
     }
-
+    @Step("Start method setEmailSubject")
     public static void setEmailSubject(String emailSubject) {
-        getLogger().info("Start method setEmailSubject");
         mailSubjectTextBox.sendKeys(emailSubject);
     }
-
+    @Step("Start method clickSendLetterButton")
     public static void clickSendLetterButton() {
-        getLogger().info("Start method clickSendLetterButton");
         sendLetterButton.click();
     }
-
+    @Step("Start method waitUntilEmailReceived")
     public static void waitUntilEmailReceived(String uniqueName) {
-        getLogger().info("Start method waitUntilEmailReceived");
         boolean elementFound = false;
         while (!elementFound) {
             try {
@@ -110,14 +104,12 @@ public class EmailPage {
             }
         }
     }
-
-    public static void clickSaveDocumentButton() {
-        getLogger().info("Start method clickSaveDocumentButton");
+    @Step("Start method clickSaveDocumentButton")
+    public static void  clickSaveDocumentButton() {
         JavascriptExecutor js = (JavascriptExecutor) getDriver();
         js.executeScript("arguments[0].click();", toggleButton.getElement());
         saveInDocumentButton.click();
     }
-
     public static SaveDocumentPopup getSaveDocumentPopup() {
         return new SaveDocumentPopup();
     }

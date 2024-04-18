@@ -1,5 +1,6 @@
 package org.example.pages;
 
+import io.qameta.allure.Step;
 import lombok.Getter;
 import org.example.elements.Element;
 import org.openqa.selenium.By;
@@ -26,9 +27,8 @@ public class DocumentsPage {
     @Getter
     private static final String trashLocatorTemplate = "//div[@class='GCSDBRWBAKB' and contains(text(), '%s')]";
 
-
+    @Step("Start method clickDocumentsButton")
     public static void clickDocumentsButton() {
-        getLogger().info("Start method clickDocumentsButton");
         ((JavascriptExecutor) getDriver()).executeScript("arguments[0].scrollIntoView(true);", documentsButton.getElement());
         Boolean until =
                 getWaiter().withMessage("Waiting until element disappears").
@@ -41,9 +41,10 @@ public class DocumentsPage {
     }
 
     public static Element getReceivedEmail(String uniqueName) {
-        return new Element(By.xpath(String.format(receivedEmailLocatorTemplate, uniqueName)));
+        return new Element(By.xpath(String.format(receivedEmailLocatorTemplate, uniqueName)), "Received email");
     }
 
+    @Step()
     public static void sleepForTwoSeconds() {
         getLogger().info("Start method sleepForTwoSeconds");
         try {
@@ -52,17 +53,15 @@ public class DocumentsPage {
             throw new RuntimeException(e);
         }
     }
-
+    @Step("Start method deleteEmailFromDocumentsWithRightClick")
     public static void deleteEmailFromDocumentsWithRightClick(String uniqueName) {
-        getLogger().info("Start method deleteEmailFromDocumentsWithRightClick");
         Actions actions = new Actions(getDriver());
         waitForVisibility(getReceivedEmail(uniqueName));
         actions.contextClick(getReceivedEmail(uniqueName).getElement()).perform();
         deleteElementButton.click();
     }
-
+    @Step("Start method openTrash")
     public static void openTrash() {
-        getLogger().info("Start method openTrash");
         trashButton.click();
     }
 
@@ -75,9 +74,8 @@ public class DocumentsPage {
             return false;
         }
     }
-
+    @Step("Start method assertElementIsPresentInTrash")
     public static void assertElementIsPresentInTrash(String uniqueName) {
-        getLogger().info("Start method assertElementIsPresentInTrash");
         boolean isElementPresent = isElementPresentInTrash(uniqueName);
         Assert.assertTrue(isElementPresent, "The element is not present in the Trash");
     }
