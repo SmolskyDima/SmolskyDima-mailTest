@@ -1,12 +1,13 @@
+import io.qameta.allure.Description;
+import io.qameta.allure.Feature;
+import io.qameta.allure.Story;
 import org.example.entity.User;
-import org.example.listener.TestListener;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
 import org.example.pages.LoginPage;
 import org.example.utils.TemporaryFileCreator;
 import org.testng.annotations.AfterMethod;
 import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Listeners;
 import org.testng.annotations.Test;
 
 import java.nio.file.Path;
@@ -15,7 +16,6 @@ import static org.example.driver.WebDriverWrapper.getDriver;
 import static org.example.driver.WebDriverWrapper.quitDriver;
 import static org.example.utils.UserManager.getUserById;
 
-@Listeners(TestListener.class)
 public class MailFenceAutomationTest {
 
     private static final String MAIL_URL = "https://mailfence.com/sw?type=L&state=0&lf=mailfence";
