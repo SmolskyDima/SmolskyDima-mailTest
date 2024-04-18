@@ -17,9 +17,6 @@ public class Element {
         this.elementName = elementName;
     }
 
-    public Element(By xpath) {
-        this.locator = xpath;
-    }
 
     public WebElement getElement() {
         return getDriver().findElement(locator);
