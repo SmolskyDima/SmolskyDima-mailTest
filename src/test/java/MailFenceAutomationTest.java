@@ -1,6 +1,3 @@
-import io.qameta.allure.Description;
-import io.qameta.allure.Feature;
-import io.qameta.allure.Story;
 import org.example.entity.User;
 import org.example.pages.DocumentsPage;
 import org.example.pages.EmailPage;
@@ -24,6 +21,7 @@ public class MailFenceAutomationTest {
     public void setUp() {
         getDriver().get(MAIL_URL);
     }
+
 
     @Test
     public void mailFenceAutomationTest() {
