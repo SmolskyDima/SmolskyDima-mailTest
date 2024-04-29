@@ -78,4 +78,5 @@ public class MailFenceAutomationTest {
     public void closeWebDriver() {
         quitDriver();
     }
+
 }
