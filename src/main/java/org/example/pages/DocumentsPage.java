@@ -44,9 +44,8 @@ public class DocumentsPage {
         return new Element(By.xpath(String.format(receivedEmailLocatorTemplate, uniqueName)), "Received email");
     }
 
-    @Step()
+    @Step("Start method sleepForTwoSeconds")
     public static void sleepForTwoSeconds() {
-        getLogger().info("Start method sleepForTwoSeconds");
         try {
             Thread.sleep(2000);
         } catch (InterruptedException e) {

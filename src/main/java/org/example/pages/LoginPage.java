@@ -34,7 +34,7 @@ public class LoginPage {
 
             Assert.assertTrue(waitForSpinnerToDisappear(), "Page is not loaded after login");
         } catch (NoSuchElementException e) {
-            getLogger().error(" ", e);
+            getLogger().error("Element is not present", e);
         }
     }
     @Step("Waiting for the start page to load - spinner has to disappear")
