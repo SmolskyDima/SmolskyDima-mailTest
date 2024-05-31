@@ -10,11 +10,11 @@
             </class>
         </classes>
     </test>
-    <test name="mailFenceAutomationTest2">
+    <test name="mailFenceAutomationTestDuplicate">
         <classes>
             <class name="MailFenceAutomationTest">
                 <methods>
-                    <include name="mailFenceAutomationTest2"/>
+                    <include name="mailFenceAutomationTestDuplicate"/>
                 </methods>
             </class>
         </classes>

@@ -11,6 +11,7 @@ import java.nio.file.Path;
 
 import static org.example.driver.WebDriverWrapper.getDriver;
 import static org.example.driver.WebDriverWrapper.quitDriver;
+import static org.example.pages.DocumentsPage.sleepForTwoSeconds;
 import static org.example.utils.UserManager.getUserById;
 
 public class MailFenceAutomationTest {
@@ -21,7 +22,6 @@ public class MailFenceAutomationTest {
     public void setUp() {
         getDriver().get(MAIL_URL);
     }
-
 
     @Test
     public void mailFenceAutomationTest() {
@@ -40,22 +40,18 @@ public class MailFenceAutomationTest {
         EmailPage.getSaveDocumentPopup().clickMyDocuments();
         EmailPage.getSaveDocumentPopup().clickSaveButton();
         DocumentsPage.clickDocumentsButton();
-        DocumentsPage.sleepForTwoSeconds();
+        sleepForTwoSeconds();
         DocumentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
         DocumentsPage.openTrash();
         DocumentsPage.assertElementIsPresentInTrash(subjectOfEmail);
     }
 
     @Test
-    public void mailFenceAutomationTest2() {
+    public void mailFenceAutomationTestDuplicate() {
         User user = getUserById("testUser");
         Path filePath = TemporaryFileCreator.createTempFile();
         String subjectOfEmail = TemporaryFileCreator.extractFileName(filePath);
-        try {
-            Thread.sleep(1000);
-        } catch (InterruptedException e) {
-            throw new RuntimeException(e);
-        }
+        sleepForTwoSeconds();
         LoginPage.loginAsUser(user.getName(), user.getPassword());
         EmailPage.clickNewLetterButton();
         EmailPage.enterRecipientEmail(user.getEmail());
@@ -68,7 +64,7 @@ public class MailFenceAutomationTest {
         EmailPage.getSaveDocumentPopup().clickMyDocuments();
         EmailPage.getSaveDocumentPopup().clickSaveButton();
         DocumentsPage.clickDocumentsButton();
-        DocumentsPage.sleepForTwoSeconds();
+        sleepForTwoSeconds();
         DocumentsPage.deleteEmailFromDocumentsWithRightClick(subjectOfEmail);
         DocumentsPage.openTrash();
         DocumentsPage.assertElementIsPresentInTrash(subjectOfEmail);
